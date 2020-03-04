@@ -8,6 +8,8 @@ class LoginScreen extends Component {
     this.state = {
       email: '',
       password: '',
+      user_id: '',
+      x_auth: '',
     }
   }
 
@@ -21,12 +23,11 @@ class LoginScreen extends Component {
 
   render() {
 
+    const { navigate } = this.props.navigation;
+
     return (
       <View style={styles.view}>
-        <Image
-          source = {require("../../img/chittr_logo.png")}
-          style = {styles.logo}
-        />
+        <Text style={styles.loginheader}>Chittr Login</Text>
 
         <TextInput
           placeholder = "Email"
@@ -64,7 +65,14 @@ class LoginScreen extends Component {
    })
    .then((response) => response.json())
    .then((responseJson) => {
-     Alert.alert("Logged In!");
+     this.setState({
+       user_id: JSON.stringify(responseJson.id),
+       x_auth: JSON.stringify(responseJson.token),
+     })
+     this.saveUserID(this.state.user_id);
+     console.log(this.getUserID());
+     this.props.navigation.navigate('Home');
+     console.log("Log in of user ID " + responseJson.id + " successful.");
    })
    .catch((error) => {
      console.error(error);
@@ -72,6 +80,8 @@ class LoginScreen extends Component {
  }
 
 }
+
+
 
 const styles = StyleSheet.create({
   button: {
@@ -99,11 +109,10 @@ const styles = StyleSheet.create({
   view: {
     marginTop: 150,
   },
-  logo: {
-    width: 200,
-    height: 100,
-    justifyContent: 'center',
-    marginLeft: 105
+  loginheader: {
+    marginLeft: 125,
+    fontSize: 30,
+    marginBottom: 10
   }
 });
 

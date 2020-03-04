@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Image, StyleSheet, Alert, TouchableOpacity, TextInput, Text, View } from 'react-native';
 
-class RegisterScreen extends Component {
+class AddChitScreen extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      given_name: '',
-      family_name: '',
-      email: '',
-      password: ''
+      logged_in: true,
+      user_id: '17',
+      x_auth: '',
+      chit_content: '',
     };
   }
 
@@ -35,53 +35,25 @@ class RegisterScreen extends Component {
    });
  }
 
-  handleGivenName = (text) => {
-    this.setState({given_name: text})
-  }
-
-  handleFamilyName = (text) => {
-    this.setState({family_name: text})
-  }
-
-  handleEmail = (text) => {
-    this.setState({email: text})
-  }
-
-  handlePassword = (text) => {
-    this.setState({password: text})
+  handleChitContent = (text) => {
+    this.setState({chit_content: text})
   }
 
   render() {
     return (
       <View style = {styles.view}>
-        <Text style={styles.registerheader}>Chittr Registration</Text>
+
         <TextInput
           style = {styles.textinput}
-          placeholder = "First Name"
-          onChangeText = {this.handleGivenName}
-        />
-        <TextInput
-          style = {styles.textinput}
-          placeholder = "Last Name"
-          onChangeText = {this.handleFamilyName}
-        />
-        <TextInput
-          style = {styles.textinput}
-          placeholder = "Email Address"
-          onChangeText = {this.handleEmail}
-        />
-        <TextInput
-          style = {styles.textinput}
-          placeholder = "Password"
-          onChangeText = {this.handlePassword}
-          secureTextEntry = {true}
+          placeholder = "Chit"
+          onChangeText = {this.handleChitContent}
         />
 
         <TouchableOpacity
-          onPress = {() => this.addUser()}
+          onPress = {() => this.addChit()}
           style = {styles.button}
         >
-          <Text>Register</Text>
+          <Text>Post</Text>
         </TouchableOpacity>
 
       </View>
@@ -121,12 +93,7 @@ const styles = StyleSheet.create({
     height: 100,
     justifyContent: 'center',
     marginLeft: 105
-  },
-  registerheader: {
-    marginLeft: 80,
-    fontSize: 30,
-    marginBottom: 10
   }
 });
 
-export default RegisterScreen;
+export default AddChitScreen;

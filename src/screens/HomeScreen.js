@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Image, Alert, Header, StyleSheet, Button, FlatList, ActivityIndicator, Text, View } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 class HomeScreen extends Component {
 
@@ -12,23 +11,14 @@ class HomeScreen extends Component {
     this.state = {
       isLoading: true,
       chitList: [],
-      logged_in: false,
-    }
-  }
-
-  static navigationOptions = {
-    headerTitle: (
-      <Image
-        source = {require("../../img/chittr_logo.png")}
-        style = {{width: 100, height: 50, marginLeft: 140}}
-      />
-    ),
-    headerStyle: {
-      backgroundColor: "#12b2fd"
+      logged_in: true,
+      user_id: '17',
+      x_auth: ''
     }
   }
 
   render() {
+
     if (this.state.isLoading) {
       return (
         <View style = {styles.view}>
@@ -37,25 +27,43 @@ class HomeScreen extends Component {
         </View>
       )
     } else {
-      return (
-        <View style = {styles.view}>
-          <FlatList
-            data = {this.state.chitList}
-            renderItem = {({item}) =>
-                                    <Text style = {styles.ChitItem}>
-                                        {item.user.given_name} says: {"\n"}
-                                        {item.chit_content}
-                                    </Text>
-                         }
-            keyExtractor = {({chit_id}, index) => chit_id}
-            style = {{margin: 20}}
-          />
-          <Button
-            title = "Logout"
-            onPress = {() => this.logoutUser()}
-          />
-        </View>
-      );
+      if (this.state.logged_in == false) {
+        return (
+          <View style = {styles.view}>
+            <FlatList
+              data = {this.state.chitList}
+              renderItem = {({item}) =>
+                                      <Text style = {styles.chititem}>
+                                          <Text style = {styles.chitheader}>{item.user.given_name} {item.user.family_name} says: {"\n"}</Text>
+                                          <Text style = {styles.chitcontent}>{item.chit_content}</Text>
+                                      </Text>
+                           }
+              keyExtractor = {({chit_id}, index) => chit_id.toString()}
+              style = {{margin: 20}}
+            />
+          </View>
+        );
+      } else {
+        return (
+          <View style = {styles.view}>
+            <FlatList
+              data = {this.state.chitList}
+              renderItem = {({item}) =>
+                                      <Text style = {styles.chititem}>
+                                          <Text style = {styles.chitheader}>{item.user.given_name} {item.user.family_name} says: {"\n"}</Text>
+                                          <Text style = {styles.chitcontent}>{item.chit_content}</Text>
+                                      </Text>
+                           }
+              keyExtractor = {({chit_id}, index) => chit_id.toString()}
+              style = {{margin: 20}}
+            />
+            <Button
+              title = "Logout"
+              onPress = {() => this.logoutUser()}
+            />
+          </View>
+        );
+      }
   }
 }
 
@@ -65,7 +73,7 @@ class HomeScreen extends Component {
       .then((responseJson) => {
         this.setState({
           isLoading: false,
-          chitList: responseJson,
+          chitList: responseJson
         });
       })
       .catch((error) => {
@@ -79,16 +87,12 @@ class HomeScreen extends Component {
        method: 'POST',
        headers: {
          "Content-Type":"application/json",
-         "X-Authorization":this.state.x_auth
+         "X-Authorization":userStore.getXAuth()
        }
    })
    .then((response) => "OK")
    .then((responseJson) => {
-     this.setState({
-       logged_in: false,
-       user_id: '',
-       x_auth: '',
-     });
+
      Alert.alert("Logged Out!");
    })
    .catch((error) => {
@@ -99,6 +103,7 @@ class HomeScreen extends Component {
   componentDidMount() {
     this.getData();
   }
+
 
 }
 
@@ -121,12 +126,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 105
   },
-  ChitItem :{
+  chititem :{
     margin: 5,
-    padding: 10,
+    padding: 20,
     borderRadius: 10,
     backgroundColor: '#e6ffff',
     elevation: 2
+  },
+  chitcontext :{
+
+  },
+  chitheader :{
+    fontWeight: 'bold'
   },
   loadingtext :{
     textAlign: 'center',
