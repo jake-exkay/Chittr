@@ -9,7 +9,8 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import AddChitScreen from './screens/AddChitScreen';
-
+import FollowingScreen from './screens/FollowingScreen';
+import FollowersScreen from './screens/FollowersScreen';
 
 class NavigationDrawerStructure extends Component {
   toggleDrawer = () => {
@@ -117,6 +118,50 @@ const ProfileScreen_stack = createStackNavigator({
   },
 });
 
+const FollowingScreen_stack = createStackNavigator({
+  //All the screen from the Screen3 will be indexed here
+  Following: {
+    screen: FollowingScreen,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle: () => (
+        <Image
+          source = {require("../img/chittr_logo.png")}
+          style = {{width: 100, height: 50, marginLeft: 80}}
+        />
+      ),
+      headerLeft: () => (
+        <NavigationDrawerStructure navigationProps={navigation} />
+      ),
+      headerStyle: {
+        backgroundColor: '#12b2fd',
+      },
+      headerTintColor: '#fff',
+    }),
+  },
+});
+
+const FollowersScreen_stack = createStackNavigator({
+  //All the screen from the Screen3 will be indexed here
+  Followers: {
+    screen: FollowersScreen,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle: () => (
+        <Image
+          source = {require("../img/chittr_logo.png")}
+          style = {{width: 100, height: 50, marginLeft: 80}}
+        />
+      ),
+      headerLeft: () => (
+        <NavigationDrawerStructure navigationProps={navigation} />
+      ),
+      headerStyle: {
+        backgroundColor: '#12b2fd',
+      },
+      headerTintColor: '#fff',
+    }),
+  },
+});
+
 const AddChitScreen_stack = createStackNavigator({
   //All the screen from the Screen3 will be indexed here
   AddChit: {
@@ -174,6 +219,20 @@ const DrawerNavigator = createDrawerNavigator({
     screen: AddChitScreen_stack,
     navigationOptions: {
       drawerLabel: 'Add Chit',
+    },
+  },
+  Following: {
+    //Title
+    screen: FollowingScreen_stack,
+    navigationOptions: {
+      drawerLabel: 'Following',
+    },
+  },
+  Followers: {
+    //Title
+    screen: FollowersScreen_stack,
+    navigationOptions: {
+      drawerLabel: 'Followers',
     },
   },
 });

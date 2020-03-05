@@ -11,14 +11,32 @@ class ProfileScreen extends Component {
     this.state = {
       logged_in: true,
       user_id: '17',
-      x_auth: '',
+      x_auth: 'd9b812405c520e140d001983cac0bd05',
       given_name: '',
-      family_name: ''
+      family_name: '',
+      profile_id: '16',
+      followerList: []
     }
   }
 
   render() {
+    // User not logged in
     if (this.state.logged_in == false) {
+      return (
+        <View style = {styles.view}>
+          <TouchableOpacity
+            title = "Followers"
+            onPress = {() => this.viewFollowers()}
+          />
+          <TouchableOpacity
+            title = "Following"
+            onPress = {() => this.viewFollowing()}
+          />
+        </View>
+      );
+
+    // User viewing their own profile
+  } else if (this.state.user_id == this.state.profile_id) {
       return (
         <View style = {styles.view}>
           <TouchableOpacity
@@ -35,6 +53,8 @@ class ProfileScreen extends Component {
           />
         </View>
       );
+
+    // User viewing another profile
     } else {
       return (
         <View style = {styles.view}>
@@ -47,14 +67,14 @@ class ProfileScreen extends Component {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress = {() => this.viewFollowers()}
+            onPress = {() => this.props.navigation.navigate('Followers')}
             style = {styles.button}
           >
             <Text>Followers</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress = {() => this.viewFollowing()}
+            onPress = {() => this.props.navigation.navigate('Following')}
             style = {styles.button}
           >
             <Text>Following</Text>
@@ -66,8 +86,26 @@ class ProfileScreen extends Component {
 
   }
 
+  followUser() {
+    return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.profile_id+'/follow',
+    {
+       method: 'POST',
+       headers: {
+         "Content-Type":"application/json",
+         "X-Authorization":this.state.x_auth
+       }
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      console.log("User " + this.state.user_id + " followed " + this.state.profile_id);
+    })
+    .catch((error) => {
+     console.error(error);
+    });
+  }
+
   getUserData() {
-    return fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+this.state.user_id)
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+this.state.profile_id)
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
@@ -80,8 +118,25 @@ class ProfileScreen extends Component {
       });
   }
 
+  getFollowerData() {
+    fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+this.state.profile_id+'/followers')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          followerList: JSON.stringify(responseJson)
+        });
+        console.log("Followers of " + this.state.profile_id + " " + this.state.followerList);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+  }
+
   componentDidMount() {
+    console.log(this.state.user_id + " is viewing the profile of " + this.state.profile_id);
     this.getUserData();
+    this.getFollowerData();
   }
 
 }

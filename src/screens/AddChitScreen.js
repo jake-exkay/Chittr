@@ -13,22 +13,21 @@ class AddChitScreen extends Component {
     };
   }
 
-  addUser() {
-    return fetch("http://10.0.2.2:3333/api/v0.0.5/user",
+  addChit() {
+    return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
     {
        method: 'POST',
        body: JSON.stringify({
-         given_name: this.state.given_name,
-         family_name: this.state.family_name,
-         email: this.state.email,
-         password: this.state.password
+         chit_content: this.state.chit_content,
+         user_id: this.state.user_id
        }),
        headers: {
-         "Content-Type":"application/json"
+         "Content-Type":"application/json",
+         "X-Authorization":this.state.x_auth,
        }
    })
    .then((response) => {
-     Alert.alert("Registed!");
+     Alert.alert("Chit Added!");
    })
    .catch((error) => {
      console.error(error);
