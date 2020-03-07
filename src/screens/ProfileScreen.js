@@ -11,10 +11,10 @@ class ProfileScreen extends Component {
     this.state = {
       logged_in: true,
       user_id: '17',
-      x_auth: 'd9b812405c520e140d001983cac0bd05',
+      x_auth: '71d15d64501bd0f09f078da345e44a51',
       given_name: '',
       family_name: '',
-      profile_id: '16',
+      profile_id: '17',
       followerList: []
     }
   }
@@ -24,33 +24,50 @@ class ProfileScreen extends Component {
     if (this.state.logged_in == false) {
       return (
         <View style = {styles.view}>
+
+          <Text style = {styles.username}>{this.state.given_name + " " + this.state.family_name}</Text>
+
           <TouchableOpacity
             title = "Followers"
-            onPress = {() => this.viewFollowers()}
+            onPress = {() => this.props.navigation.navigate('Followers')}
           />
+
           <TouchableOpacity
             title = "Following"
-            onPress = {() => this.viewFollowing()}
+            onPress = {() => this.props.navigation.navigate('Following')}
           />
+
         </View>
       );
 
-    // User viewing their own profile
+  // User viewing their own profile
   } else if (this.state.user_id == this.state.profile_id) {
       return (
         <View style = {styles.view}>
+
+          <Text style = {styles.username}>{this.state.given_name + " " + this.state.family_name}</Text>
+
           <TouchableOpacity
-            title = "Edit"
-            onPress = {() => this.editAccount()}
-          />
+            onPress = {() => this.props.navigation.navigate('Account')}
+            style = {styles.button}
+          >
+            <Text>Edit Account</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity
-            title = "Followers"
-            onPress = {() => this.viewFollowers()}
-          />
+            onPress = {() => this.props.navigation.navigate('Followers')}
+            style = {styles.button}
+          >
+            <Text>Followers</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity
-            title = "Following"
-            onPress = {() => this.viewFollowing()}
-          />
+            onPress = {() => this.props.navigation.navigate('Following')}
+            style = {styles.button}
+          >
+            <Text>Following</Text>
+          </TouchableOpacity>
+
         </View>
       );
 
@@ -58,7 +75,9 @@ class ProfileScreen extends Component {
     } else {
       return (
         <View style = {styles.view}>
-        <Text style = {styles.username}>{this.state.given_name + " " + this.state.family_name}</Text>
+
+          <Text style = {styles.username}>{this.state.given_name + " " + this.state.family_name}</Text>
+
           <TouchableOpacity
             onPress = {() => this.followUser()}
             style = {styles.button}

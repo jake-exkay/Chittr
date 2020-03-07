@@ -8,18 +8,20 @@ class AddChitScreen extends Component {
     this.state = {
       logged_in: true,
       user_id: '17',
-      x_auth: '',
+      x_auth: '71d15d64501bd0f09f078da345e44a51',
       chit_content: '',
     };
   }
 
   addChit() {
+    var date = new Date().getDate();
+
     return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
     {
        method: 'POST',
        body: JSON.stringify({
          chit_content: this.state.chit_content,
-         user_id: this.state.user_id
+         timestamp: date,
        }),
        headers: {
          "Content-Type":"application/json",

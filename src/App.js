@@ -11,6 +11,7 @@ import ProfileScreen from './screens/ProfileScreen';
 import AddChitScreen from './screens/AddChitScreen';
 import FollowingScreen from './screens/FollowingScreen';
 import FollowersScreen from './screens/FollowersScreen';
+import AccountScreen from './screens/AccountScreen';
 
 class NavigationDrawerStructure extends Component {
   toggleDrawer = () => {
@@ -184,6 +185,28 @@ const AddChitScreen_stack = createStackNavigator({
   },
 });
 
+const AccountScreen_stack = createStackNavigator({
+  //All the screen from the Screen3 will be indexed here
+  AccountScreen: {
+    screen: AccountScreen,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle: () => (
+        <Image
+          source = {require("../img/chittr_logo.png")}
+          style = {{width: 100, height: 50, marginLeft: 80}}
+        />
+      ),
+      headerLeft: () => (
+        <NavigationDrawerStructure navigationProps={navigation} />
+      ),
+      headerStyle: {
+        backgroundColor: '#12b2fd',
+      },
+      headerTintColor: '#fff',
+    }),
+  },
+});
+
 const DrawerNavigator = createDrawerNavigator({
   //Drawer Optons and indexing
   Home: {
@@ -233,6 +256,13 @@ const DrawerNavigator = createDrawerNavigator({
     screen: FollowersScreen_stack,
     navigationOptions: {
       drawerLabel: 'Followers',
+    },
+  },
+  Account: {
+    //Title
+    screen: AccountScreen_stack,
+    navigationOptions: {
+      drawerLabel: 'Account',
     },
   },
 });
