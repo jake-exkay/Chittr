@@ -14,7 +14,7 @@ class ProfileScreen extends Component {
       x_auth: '71d15d64501bd0f09f078da345e44a51',
       given_name: '',
       family_name: '',
-      profile_id: '17',
+      profile_id: '16',
       followerList: []
     }
   }

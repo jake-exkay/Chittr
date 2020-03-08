@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Image, StyleSheet, Alert, TouchableOpacity, TextInput, Text, View } from 'react-native';
+import { CheckBox, PermissionsAndroid, Image, StyleSheet, Alert, TouchableOpacity, TextInput, Text, View } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
 
 class AddChitScreen extends Component {
 
@@ -10,30 +11,116 @@ class AddChitScreen extends Component {
       user_id: '17',
       x_auth: '71d15d64501bd0f09f078da345e44a51',
       chit_content: '',
+      longitude: null,
+      latitude: null,
+      locationPermission: false,
+      geotag: false
     };
   }
+
+  requestLocationPermission = async() => {
+     try {
+       const granted = await PermissionsAndroid.request(
+         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+         {
+           title: 'Chittr Location Permission',
+           message:
+           'This app requires access to your location.',
+           buttonNegative: 'Cancel',
+           buttonPositive: 'OK',
+         },
+       );
+
+       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+         console.log('Location access ON');
+         return true;
+       } else {
+         console.log('Location access OFF');
+         return false;
+       }
+     } catch (err) {
+       console.warn(err);
+     }
+  }
+
+  componentDidMount() {
+    this.findCoordinates()
+  }
+
+
+  findCoordinates = () => {
+    if(!this.state.locationPermission){
+     this.state.locationPermission = this.requestLocationPermission();
+    }
+
+    Geolocation.getCurrentPosition(
+      (position) => {
+        const longitude = JSON.stringify(position.coords.longitude);
+        const latitude = JSON.stringify(position.coords.latitude);
+        this.setState({
+          longitude: longitude,
+          latitude: latitude
+        });
+      },
+      (error) => {
+        Alert.alert(error.message)
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 20000,
+        maximumAge: 1000
+      }
+    );
+  };
 
   addChit() {
     var date = new Date().getDate();
 
-    return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
-    {
-       method: 'POST',
-       body: JSON.stringify({
-         chit_content: this.state.chit_content,
-         timestamp: date,
-       }),
-       headers: {
-         "Content-Type":"application/json",
-         "X-Authorization":this.state.x_auth,
-       }
-   })
-   .then((response) => {
-     Alert.alert("Chit Added!");
-   })
-   .catch((error) => {
-     console.error(error);
-   });
+    if (this.state.geotag == true) {
+      return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
+      {
+         method: 'POST',
+         body: JSON.stringify({
+           chit_content: this.state.chit_content,
+           timestamp: date,
+           location: {
+             longitude: this.state.longitude,
+             latitude: this.state.latitude
+           }
+
+         }),
+         headers: {
+           "Content-Type":"application/json",
+           "X-Authorization":this.state.x_auth,
+         }
+     })
+     .then((response) => {
+       Alert.alert("Chit Added!");
+     })
+     .catch((error) => {
+       console.error(error);
+     });
+    } else {
+      return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
+      {
+         method: 'POST',
+         body: JSON.stringify({
+           chit_content: this.state.chit_content,
+           timestamp: date,
+         }),
+         headers: {
+           "Content-Type":"application/json",
+           "X-Authorization":this.state.x_auth,
+         }
+     })
+     .then((response) => {
+       Alert.alert("Chit Added!");
+     })
+     .catch((error) => {
+       console.error(error);
+     });
+    }
+
  }
 
   handleChitContent = (text) => {
@@ -49,6 +136,15 @@ class AddChitScreen extends Component {
           placeholder = "Chit"
           onChangeText = {this.handleChitContent}
         />
+
+        <View style = {styles.checkbox}>
+          <CheckBox
+            title = "Add Geotag"
+            value = {this.state.geotag}
+            onValueChange = {() => this.setState({geotag: !this.state.geotag})}
+          />
+          <Text style = {styles.checkboxtext}>Add Geotag?</Text>
+        </View>
 
         <TouchableOpacity
           onPress = {() => this.addChit()}
@@ -94,6 +190,15 @@ const styles = StyleSheet.create({
     height: 100,
     justifyContent: 'center',
     marginLeft: 105
+  },
+  checkbox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10
+  },
+  checkboxtext: {
+
   }
 });
 

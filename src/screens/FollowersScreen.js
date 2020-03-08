@@ -27,13 +27,26 @@ class FollowersScreen extends Component {
         </View>
       );
     } else {
+      if (this.state.followerList && this.state.followerList.length < 0) {
+        return (
+          <View style = {styles.view}>
+            <Text style = {styles.nofollowers}>This user does not have any followers!</Text>
+            <TouchableOpacity
+              onPress = {() => this.props.navigation.navigate('Profile')}
+              style = {styles.button}
+            >
+              <Text>Follow them?</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      } else {
       return (
         <View style = {styles.view}>
           <FlatList
             data = {this.state.followerList}
             renderItem = {({item}) =>
                                     <Text>
-                                        <Text>{item.given_name} {item.family_name}</Text>
+                                        <Text style = {styles.followername}>{item.given_name} {item.family_name}</Text>
                                     </Text>
                          }
             keyExtractor = {({user_id}, index) => user_id.toString()}
@@ -43,6 +56,7 @@ class FollowersScreen extends Component {
       );
     }
   }
+}
 
   componentDidMount() {
     this.getFollowers();
@@ -72,7 +86,8 @@ const styles = StyleSheet.create({
     marginLeft: 100,
     marginRight: 100,
     borderRadius: 3,
-    elevation: 2
+    elevation: 2,
+    marginTop: 10
   },
   view: {
     marginTop: 10,
@@ -87,6 +102,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 30,
     marginBottom: 30,
+  },
+  nofollowers: {
+    textAlign: 'center',
+    fontSize: 20,
+    marginTop: 200,
+  },
+  followername: {
+    textAlign: 'center',
+    fontSize: 20
   }
 });
 
