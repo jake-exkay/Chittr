@@ -38,7 +38,7 @@ class AccountScreen extends Component {
 
   render() {
     return (
-      <View style={styles.view}>
+      <View style={styles.container}>
         <Text style={styles.accountheader}>Update Account</Text>
 
         <TextInput
@@ -98,21 +98,21 @@ class AccountScreen extends Component {
           ref={ref => {
             this.camera = ref;
           }}
-          style={{
-            flex:1,
-            width:'100%',
-          }}
+          style={styles.capture}
         />
 
-        <TouchableOpacity
-          onPress={this.takePicture.bind(this)}
-          style =  {{ flex: 0, borderRadius: 5, padding: 15, paddingHorizontal: 20,
- alignSelf: 'center', margin: 20, }}
-        >
-        <Text>
-          Take Picture
-        </Text>
-        </TouchableOpacity>
+        <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
+
+          <TouchableOpacity
+            onPress = {this.takePicture.bind(this)}
+            style =  {styles.capture}
+          >
+          <Text style={{ fontSize: 16 }}>
+            Take Picture
+          </Text>
+          </TouchableOpacity>
+
+        </View>
 
       </View>
     );
@@ -123,7 +123,26 @@ class AccountScreen extends Component {
     if(this.camera) {
       const options = { quality: 0.5, base64: true };
       const data = await this.camera.takePictureAsync(options);
+
       console.log(data.uri);
+
+      return fetch("http://10.0.2.2:3333/api/v0.0.5/user/photo",
+      {
+         method: 'POST',
+         body: JSON.stringify({
+
+         }),
+         headers: {
+           "Content-Type":"image/jpeg",
+           "X-Authorization":this.state.x_auth,
+         }
+     })
+     .then((response) => {
+       Alert.alert("Photo Updated!");
+     })
+     .catch((error) => {
+       console.error(error);
+     });
     }
   };
 
@@ -223,9 +242,6 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     elevation: 2
   },
-  view: {
-    marginTop: 10,
-  },
   textinput: {
     alignItems: 'center',
     padding: 10,
@@ -243,6 +259,23 @@ const styles = StyleSheet.create({
     marginLeft: 95,
     fontSize: 30,
     marginBottom: 10
+  },
+  container: {
+    flex: 1,
+    flexDirection: 'column'
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center'
+  },
+  capture: {
+    flex: 0,
+    borderRadius: 5,
+    padding: 15,
+    paddingHorizontal: 20,
+    alignSelf: 'center',
+    margin: 20,
   }
 });
 

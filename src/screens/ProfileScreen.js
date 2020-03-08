@@ -15,7 +15,8 @@ class ProfileScreen extends Component {
       given_name: '',
       family_name: '',
       profile_id: '16',
-      followerList: []
+      followerList: [],
+      profile_picture: ''
     }
   }
 
@@ -152,10 +153,26 @@ class ProfileScreen extends Component {
 
   }
 
+  getProfilePicture() {
+    fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+this.state.profile_id+'/photo')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          profile_picture: responseJson
+        });
+        console.log(responseJson);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+  }
+
   componentDidMount() {
     console.log(this.state.user_id + " is viewing the profile of " + this.state.profile_id);
     this.getUserData();
     this.getFollowerData();
+    this.getProfilePicture();
   }
 
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, StyleSheet, TextInput, TouchableOpacity, Alert, Text, View } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity, Alert, Text, View } from 'react-native';
 
 class LoginScreen extends Component {
 
@@ -8,32 +8,23 @@ class LoginScreen extends Component {
     this.state = {
       email: '',
       password: '',
-      user_id: '',
-      x_auth: '',
+      user_id: '17',
+      x_auth: '71d15d64501bd0f09f078da345e44a51',
     }
   }
 
-  handleEmail = (text) => {
-    this.setState({email: text})
-  }
-
-  handlePassword = (text) => {
-    this.setState({password: text})
-  }
-
   render() {
-
-    const { navigate } = this.props.navigation;
-
     return (
-      <View style={styles.view}>
-        <Text style={styles.loginheader}>Chittr Login</Text>
+      <View style = {styles.view}>
+
+        <Text style = {styles.loginheader}>Chittr Login</Text>
 
         <TextInput
           placeholder = "Email"
           onChangeText = {this.handleEmail}
           style = {styles.textinput}
         />
+
         <TextInput
           placeholder = "Password"
           onChangeText = {this.handlePassword}
@@ -45,8 +36,11 @@ class LoginScreen extends Component {
           onPress = {() => this.loginUser()}
           style = {styles.button}
         >
-          <Text>Login</Text>
+
+        <Text>Login</Text>
+
         </TouchableOpacity>
+
       </View>
     );
   }
@@ -65,23 +59,32 @@ class LoginScreen extends Component {
    })
    .then((response) => response.json())
    .then((responseJson) => {
-     this.setState({
-       user_id: JSON.stringify(responseJson.id),
-       x_auth: JSON.stringify(responseJson.token),
-     })
-     this.saveUserID(this.state.user_id);
-     console.log(this.getUserID());
-     this.props.navigation.navigate('Home');
-     console.log("Log in of user ID " + responseJson.id + " successful.");
+     if (response.status == "201") {
+       Alert.alert("Welcome!");
+       this.setState({
+         user_id: JSON.stringify(responseJson.id),
+         x_auth: JSON.stringify(responseJson.token),
+       })
+       this.props.navigation.navigate('Home');
+       console.log("Log in of user ID " + responseJson.id + " successful.");
+     } else {
+       Alert.alert("Sorry! There was an issue when logging you in.");
+     }
    })
    .catch((error) => {
      console.error(error);
    });
  }
 
+ handleEmail = (text) => {
+   this.setState({email: text})
+ }
+
+ handlePassword = (text) => {
+   this.setState({password: text})
+ }
+
 }
-
-
 
 const styles = StyleSheet.create({
   button: {

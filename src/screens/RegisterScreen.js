@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, StyleSheet, Alert, TouchableOpacity, TextInput, Text, View } from 'react-native';
+import { StyleSheet, Alert, TouchableOpacity, TextInput, Text, View } from 'react-native';
 
 class RegisterScreen extends Component {
 
@@ -11,6 +11,50 @@ class RegisterScreen extends Component {
       email: '',
       password: ''
     };
+  }
+
+  render() {
+    return (
+      <View style = {styles.container}>
+
+        <Text style = {styles.registerheader}>Chittr Registration</Text>
+
+        <TextInput
+          style = {styles.textinput}
+          placeholder = "First Name"
+          onChangeText = {this.handleGivenName}
+        />
+
+        <TextInput
+          style = {styles.textinput}
+          placeholder = "Last Name"
+          onChangeText = {this.handleFamilyName}
+        />
+
+        <TextInput
+          style = {styles.textinput}
+          placeholder = "Email Address"
+          onChangeText = {this.handleEmail}
+        />
+
+        <TextInput
+          style = {styles.textinput}
+          placeholder = "Password"
+          onChangeText = {this.handlePassword}
+          secureTextEntry = {true}
+        />
+
+        <TouchableOpacity
+          onPress = {() => this.addUser()}
+          style = {styles.button}
+        >
+
+        <Text>Register</Text>
+
+        </TouchableOpacity>
+
+      </View>
+    );
   }
 
   addUser() {
@@ -28,7 +72,11 @@ class RegisterScreen extends Component {
        }
    })
    .then((response) => {
-     Alert.alert("Registed!");
+     if (response.status == "201") {
+       Alert.alert("Successfully created account!");
+     } else {
+       Alert.alert("Sorry! There was an issue creating your account.");
+     }
    })
    .catch((error) => {
      console.error(error);
@@ -51,42 +99,6 @@ class RegisterScreen extends Component {
     this.setState({password: text})
   }
 
-  render() {
-    return (
-      <View style = {styles.view}>
-        <Text style={styles.registerheader}>Chittr Registration</Text>
-        <TextInput
-          style = {styles.textinput}
-          placeholder = "First Name"
-          onChangeText = {this.handleGivenName}
-        />
-        <TextInput
-          style = {styles.textinput}
-          placeholder = "Last Name"
-          onChangeText = {this.handleFamilyName}
-        />
-        <TextInput
-          style = {styles.textinput}
-          placeholder = "Email Address"
-          onChangeText = {this.handleEmail}
-        />
-        <TextInput
-          style = {styles.textinput}
-          placeholder = "Password"
-          onChangeText = {this.handlePassword}
-          secureTextEntry = {true}
-        />
-
-        <TouchableOpacity
-          onPress = {() => this.addUser()}
-          style = {styles.button}
-        >
-          <Text>Register</Text>
-        </TouchableOpacity>
-
-      </View>
-    );
-  }
 
 }
 
@@ -113,7 +125,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     elevation: 3
   },
-  view: {
+  container: {
     marginTop: 80,
   },
   logo: {

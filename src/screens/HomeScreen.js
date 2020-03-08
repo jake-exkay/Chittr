@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Image, Alert, Header, StyleSheet, Button, FlatList, ActivityIndicator, Text, View } from 'react-native';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import { Alert, Header, StyleSheet, Button, FlatList, ActivityIndicator, Text, View } from 'react-native';
 
 class HomeScreen extends Component {
 
@@ -13,7 +11,7 @@ class HomeScreen extends Component {
       chitList: [],
       logged_in: true,
       user_id: '17',
-      x_auth: ''
+      x_auth: '71d15d64501bd0f09f078da345e44a51'
     }
   }
 
@@ -30,6 +28,7 @@ class HomeScreen extends Component {
       if (this.state.logged_in == false) {
         return (
           <View style = {styles.view}>
+
             <FlatList
               data = {this.state.chitList}
               renderItem = {({item}) =>
@@ -41,11 +40,13 @@ class HomeScreen extends Component {
               keyExtractor = {({chit_id}, index) => chit_id.toString()}
               style = {{margin: 20}}
             />
+
           </View>
         );
       } else {
         return (
           <View style = {styles.view}>
+
             <FlatList
               data = {this.state.chitList}
               renderItem = {({item}) =>
@@ -57,15 +58,21 @@ class HomeScreen extends Component {
               keyExtractor = {({chit_id}, index) => chit_id.toString()}
               style = {{margin: 20}}
             />
+
             <Button
               title = "Logout"
               onPress = {() => this.logoutUser()}
             />
+
           </View>
         );
       }
+    }
   }
-}
+
+  componentDidMount() {
+    this.getData();
+  }
 
   getData() {
     return fetch('http://10.0.2.2:3333/api/v0.0.5/chits')
@@ -87,23 +94,17 @@ class HomeScreen extends Component {
        method: 'POST',
        headers: {
          "Content-Type":"application/json",
-         "X-Authorization":userStore.getXAuth()
+         "X-Authorization":this.state.x_auth
        }
    })
    .then((response) => "OK")
    .then((responseJson) => {
-
      Alert.alert("Logged Out!");
    })
    .catch((error) => {
      console.error(error);
    });
  }
-
-  componentDidMount() {
-    this.getData();
-  }
-
 
 }
 
@@ -133,9 +134,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#e6ffff',
     elevation: 2
   },
-  chitcontext :{
-
-  },
   chitheader :{
     fontWeight: 'bold'
   },
@@ -145,6 +143,5 @@ const styles = StyleSheet.create({
     marginTop: 50
   }
 });
-
 
 export default HomeScreen;
