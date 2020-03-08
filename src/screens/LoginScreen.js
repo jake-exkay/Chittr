@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, Alert, Text, View } from 'react-native';
+import { AsyncStorage, StyleSheet, TextInput, TouchableOpacity, Alert, Text, View } from 'react-native';
 
 class LoginScreen extends Component {
 
@@ -8,8 +8,8 @@ class LoginScreen extends Component {
     this.state = {
       email: '',
       password: '',
-      user_id: '17',
-      x_auth: '71d15d64501bd0f09f078da345e44a51',
+      user_id: '',
+      x_auth: '',
     }
   }
 
@@ -58,18 +58,15 @@ class LoginScreen extends Component {
        }
    })
    .then((response) => response.json())
-   .then((responseJson) => {
-     if (response.status == "201") {
-       Alert.alert("Welcome!");
+   .then(responseJson => {
+       this.props.navigation.navigate('Home');
        this.setState({
          user_id: JSON.stringify(responseJson.id),
          x_auth: JSON.stringify(responseJson.token),
        })
-       this.props.navigation.navigate('Home');
-       console.log("Log in of user ID " + responseJson.id + " successful.");
-     } else {
-       Alert.alert("Sorry! There was an issue when logging you in.");
-     }
+       this.storeUser();
+       console.log("Log in of user ID " + this.state.user_id + " successful. Using x_auth of " + this.state.x_auth);
+       Alert.alert("Welcome!");
    })
    .catch((error) => {
      console.error(error);
@@ -82,6 +79,20 @@ class LoginScreen extends Component {
 
  handlePassword = (text) => {
    this.setState({password: text})
+ }
+
+ async storeUser() {
+   try {
+     await AsyncStorage.setItem('user_id', JSON.stringify(this.state.user_id));
+     await AsyncStorage.setItem('x_auth', JSON.stringify(this.state.x_auth));
+
+     let user_id = await AsyncStorage.getItem('user_id');
+
+     let x_auth = await AsyncStorage.getItem('x_auth');
+     console.log("Stored user using ID " + user_id + " and x_auth " + x_auth)
+   } catch (error) {
+     console.log(error.message);
+   }
  }
 
 }

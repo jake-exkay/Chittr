@@ -14,6 +14,7 @@ import FollowersScreen from './screens/FollowersScreen';
 import AccountScreen from './screens/AccountScreen';
 
 class NavigationDrawerStructure extends Component {
+
   toggleDrawer = () => {
     this.props.navigationProps.toggleDrawer();
   };

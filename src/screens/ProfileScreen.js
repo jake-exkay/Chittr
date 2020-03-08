@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Image, Alert, Header, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Text, View } from 'react-native';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import { AsyncStorage, Alert, Header, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Text, View } from 'react-native';
 
 class ProfileScreen extends Component {
 
@@ -10,13 +8,11 @@ class ProfileScreen extends Component {
 
     this.state = {
       logged_in: true,
-      user_id: '17',
-      x_auth: '71d15d64501bd0f09f078da345e44a51',
+      user_id: '',
+      x_auth: '',
       given_name: '',
       family_name: '',
-      profile_id: '16',
-      followerList: [],
-      profile_picture: ''
+      profile_id: '',
     }
   }
 
@@ -42,7 +38,7 @@ class ProfileScreen extends Component {
       );
 
   // User viewing their own profile
-  } else if (this.state.user_id == this.state.profile_id) {
+} else if (this.state.user_id == this.state.user_id) {
       return (
         <View style = {styles.view}>
 
@@ -106,6 +102,18 @@ class ProfileScreen extends Component {
 
   }
 
+  async loadUser() {
+    let user_id = await AsyncStorage.getItem('user_id');
+    let parse_user_id = await JSON.parse(user_id);
+    let x_auth = await AsyncStorage.getItem('x_auth');
+    let parse_x_auth = await JSON.parse(x_auth);
+    this.setState({
+      x_auth: parse_x_auth,
+      user_id: parse_user_id
+    });
+    this.getUserData();
+  }
+
   followUser() {
     return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.profile_id+'/follow',
     {
@@ -125,7 +133,7 @@ class ProfileScreen extends Component {
   }
 
   getUserData() {
-    return fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+this.state.profile_id)
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+this.state.user_id)
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
@@ -136,21 +144,6 @@ class ProfileScreen extends Component {
       .catch((error) => {
         console.log(error);
       });
-  }
-
-  getFollowerData() {
-    fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+this.state.profile_id+'/followers')
-      .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState({
-          followerList: JSON.stringify(responseJson)
-        });
-        console.log("Followers of " + this.state.profile_id + " " + this.state.followerList);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
   }
 
   getProfilePicture() {
@@ -169,10 +162,8 @@ class ProfileScreen extends Component {
   }
 
   componentDidMount() {
+    this.loadUser();
     console.log(this.state.user_id + " is viewing the profile of " + this.state.profile_id);
-    this.getUserData();
-    this.getFollowerData();
-    this.getProfilePicture();
   }
 
 }
