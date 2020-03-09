@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { CheckBox, PermissionsAndroid, Image, StyleSheet, Alert, TouchableOpacity, TextInput, Text, View } from 'react-native';
+import { AsyncStorage, CheckBox, PermissionsAndroid, Image, StyleSheet, Alert, TouchableOpacity, TextInput, Text, View } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 
 class AddChitScreen extends Component {
@@ -7,9 +7,8 @@ class AddChitScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      logged_in: true,
-      user_id: '17',
-      x_auth: '71d15d64501bd0f09f078da345e44a51',
+      user_id: '',
+      x_auth: '',
       chit_content: '',
       longitude: null,
       latitude: null,
@@ -44,9 +43,21 @@ class AddChitScreen extends Component {
   }
 
   componentDidMount() {
-    this.findCoordinates()
+    this.findCoordinates();
+    this.loadUser();
   }
 
+  async loadUser() {
+    let user_id = await AsyncStorage.getItem('user_id');
+    let parse_user_id = await JSON.parse(user_id);
+    let x_auth = await AsyncStorage.getItem('x_auth');
+    let parse_x_auth = await JSON.parse(x_auth);
+    this.setState({
+      x_auth: parse_x_auth,
+      user_id: parse_user_id
+    });
+    console.log("Loaded data from user ID: " + this.state.user_id + " and x-auth: " + this.state.x_auth);
+  }
 
   findCoordinates = () => {
     if(!this.state.locationPermission){

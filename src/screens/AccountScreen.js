@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { TextInput, Image, Alert, Header, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Text, View } from 'react-native';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import { AsyncStorage, TextInput, Alert, Header, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Text, View } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 
 class AccountScreen extends Component {
@@ -10,9 +8,8 @@ class AccountScreen extends Component {
     super(props);
 
     this.state = {
-      logged_in: true,
-      user_id: '17',
-      x_auth: '71d15d64501bd0f09f078da345e44a51',
+      user_id: '',
+      x_auth: '',
       given_name: '',
       family_name: '',
       email: '',
@@ -119,6 +116,22 @@ class AccountScreen extends Component {
 
   }
 
+  componentDidMount() {
+    this.loadUser();
+  }
+
+  async loadUser() {
+    let user_id = await AsyncStorage.getItem('user_id');
+    let parse_user_id = await JSON.parse(user_id);
+    let x_auth = await AsyncStorage.getItem('x_auth');
+    let parse_x_auth = await JSON.parse(x_auth);
+    this.setState({
+      x_auth: parse_x_auth,
+      user_id: parse_user_id
+    });
+    console.log("Loaded data from user ID: " + this.state.user_id + " and x-auth: " + this.state.x_auth);
+  }
+
   takePicture = async() => {
     if(this.camera) {
       const options = { quality: 0.5, base64: true };
@@ -145,10 +158,6 @@ class AccountScreen extends Component {
      });
     }
   };
-
-  componentDidMount() {
-
-  }
 
   updateFamilyName() {
     return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id,
