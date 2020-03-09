@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {
+  AsyncStorage,
   Alert,
   StyleSheet,
   Button,
@@ -15,7 +16,6 @@ class HomeScreen extends Component {
     this.state = {
       isLoading: true,
       chitList: [],
-      logged_in: true,
       user_id: '',
       x_auth: ''
     }
@@ -30,9 +30,14 @@ class HomeScreen extends Component {
         </View>
       )
     } else {
-      if (this.state.logged_in === false) {
+      if (this.state.user_id) {
         return (
           <View style={styles.view}>
+
+            <Button
+              title='Logout'
+              onPress={() => this.logoutUser()}
+            />
 
             <FlatList
               data={this.state.chitList}
@@ -64,11 +69,6 @@ class HomeScreen extends Component {
               style={{ margin: 20 }}
             />
 
-            <Button
-              title='Logout'
-              onPress={() => this.logoutUser()}
-            />
-
           </View>
         )
       }
@@ -77,6 +77,29 @@ class HomeScreen extends Component {
 
   componentDidMount () {
     this.getData()
+    this.loadUser()
+  }
+
+  async loadUser () {
+    const userId = await AsyncStorage.getItem('user_id')
+    const parsedUserId = await JSON.parse(userId)
+    const xAuth = await AsyncStorage.getItem('x_auth')
+    const parsedXAuth = await JSON.parse(xAuth)
+    this.setState({
+      x_auth: parsedXAuth,
+      user_id: parsedUserId
+    })
+    console.log('User Loaded: ' + this.state.user_id + ' with auth: ' + this.state.x_auth)
+  }
+
+  async removeUser () {
+    try {
+      await AsyncStorage.removeItem('x_auth')
+      await AsyncStorage.removeItem('user_id')
+      console.log('Remove stored user ID and x_auth')
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   getData () {
@@ -105,6 +128,7 @@ class HomeScreen extends Component {
       .then((response) => 'OK')
       .then((responseJson) => {
         Alert.alert('Logged Out!')
+        this.removeUser()
       })
       .catch((error) => {
         console.error(error)

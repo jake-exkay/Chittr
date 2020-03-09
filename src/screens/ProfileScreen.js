@@ -11,7 +11,6 @@ class ProfileScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      logged_in: true,
       user_id: '',
       x_auth: '',
       given_name: '',
@@ -22,7 +21,7 @@ class ProfileScreen extends Component {
 
   render () {
     // User not logged in
-    if (this.state.logged_in === false) {
+    if (this.state.user_id === false) {
       return (
         <View style={styles.view}>
 
@@ -41,7 +40,7 @@ class ProfileScreen extends Component {
         </View>
       )
 
-      // User viewing their own profile
+    // User viewing their own profile
     } else if (this.state.user_id === this.state.profile_id) {
       return (
         <View style={styles.view}>
