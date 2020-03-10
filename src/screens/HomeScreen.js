@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {
+  TouchableHighlight,
   AsyncStorage,
   Alert,
   StyleSheet,
@@ -42,10 +43,12 @@ class HomeScreen extends Component {
             <FlatList
               data={this.state.chitList}
               renderItem={({ item }) =>
-                <Text style={styles.chititem}>
-                  <Text style={styles.chitheader}>{item.user.given_name} {item.user.family_name} says: {'\n'}</Text>
-                  <Text style={styles.chitcontent}>{item.chit_content}</Text>
-                </Text>
+                <TouchableHighlight onPress={() => this.props.navigation.push('ChitScreen', {chitID:item.chit_id, chitContent:item.chit_content, userID:item.user.user_id})}>
+                  <Text style={styles.chititem}>
+                    <Text style={styles.chitheader}>{item.user.given_name} {item.user.family_name} says: {'\n'}</Text>
+                    <Text style={styles.chitcontent}>{item.chit_content}</Text>
+                  </Text>
+                </TouchableHighlight>
               }
               keyExtractor={({ chit_id }, index) => chit_id.toString()}
               style={{ margin: 20 }}
@@ -60,10 +63,12 @@ class HomeScreen extends Component {
             <FlatList
               data={this.state.chitList}
               renderItem={({ item }) =>
-                <Text style={styles.chititem}>
-                  <Text style={styles.chitheader}>{item.user.given_name} {item.user.family_name} says: {'\n'}</Text>
-                  <Text style={styles.chitcontent}>{item.chit_content}</Text>
-                </Text>
+                <TouchableHighlight onPress={() => this.props.navigation.navigate('ChitScreen')}>
+                  <Text style={styles.chititem}>
+                    <Text style={styles.chitheader}>{item.user.given_name} {item.user.family_name} says: {'\n'}</Text>
+                    <Text style={styles.chitcontent}>{item.chit_content}</Text>
+                  </Text>
+                </TouchableHighlight>
               }
               keyExtractor={({ chit_id }, index) => chit_id.toString()}
               style={{ margin: 20 }}

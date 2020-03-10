@@ -15,7 +15,9 @@ class ProfileScreen extends Component {
       x_auth: '',
       given_name: '',
       family_name: '',
-      profile_id: '17'
+      profile_id: '2',
+      followerList: [],
+      isFollower: false
     }
   }
 
@@ -72,40 +74,71 @@ class ProfileScreen extends Component {
       )
     // User viewing another profile
     } else {
-      return (
-        <View style={styles.view}>
+      if (this.state.isFollower == false) {
+        return (
+          <View style={styles.view}>
 
-          <Text style={styles.username}>{this.state.given_name + ' ' + this.state.family_name}</Text>
+            <Text style={styles.username}>{this.state.given_name + ' ' + this.state.family_name}</Text>
 
-          <TouchableOpacity
-            onPress={() => this.followUser()}
-            style={styles.button}
-          >
-            <Text>Follow</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.followUser()}
+              style={styles.button}
+            >
+              <Text>Follow</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Followers')}
-            style={styles.button}
-          >
-            <Text>Followers</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Followers')}
+              style={styles.button}
+            >
+              <Text>Followers</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Following')}
-            style={styles.button}
-          >
-            <Text>Following</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Following')}
+              style={styles.button}
+            >
+              <Text>Following</Text>
+            </TouchableOpacity>
 
-        </View>
-      )
+          </View>
+        )
+      } else {
+        return (
+          <View style={styles.view}>
+
+            <Text style={styles.username}>{this.state.given_name + ' ' + this.state.family_name}</Text>
+
+            <TouchableOpacity
+              onPress={() => this.unfollowUser()}
+              style={styles.button}
+            >
+              <Text>Unfollow</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Followers')}
+              style={styles.button}
+            >
+              <Text>Followers</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Following')}
+              style={styles.button}
+            >
+              <Text>Following</Text>
+            </TouchableOpacity>
+
+          </View>
+        )
+      }
+
     }
   }
 
   componentDidMount () {
     this.loadUser()
-    console.log(this.state.user_id + ' is viewing the profile of ' + this.state.profile_id)
   }
 
   async loadUser () {
@@ -118,38 +151,48 @@ class ProfileScreen extends Component {
       user_id: parsedUserId
     })
     this.getUserData()
-  }
-
-  followUser () {
-    return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.profile_id + '/follow',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Authorization': this.state.x_auth
-        }
-      })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        console.log('User ' + this.state.user_id + ' followed ' + this.state.profile_id)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+    console.log(this.state.user_id + ' is viewing the profile of ' + this.state.profile_id)
   }
 
   getUserData () {
-    return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.user_id)
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.profile_id)
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
           given_name: responseJson.given_name,
           family_name: responseJson.family_name
         })
+        this.getFollowers()
       })
       .catch((error) => {
         console.log(error)
       })
+  }
+
+  getFollowers () {
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.profile_id + '/followers')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          followerList: responseJson
+        })
+        this.isFollower()
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  isFollower () {
+    console.log(this.state.followerList)
+    for (var i = 0; i < this.state.followerList.length; i++) {
+      if (this.state.user_id == this.state.followerList[i].user_id) {
+        this.setState({
+          isFollower: true
+        })
+        console.log("User is a follower of " + this.state.profile_id)
+      }
+    }
   }
 
   getProfilePicture () {
@@ -165,6 +208,43 @@ class ProfileScreen extends Component {
         console.log(error)
       })
   }
+
+  followUser () {
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.profile_id + '/follow',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Authorization': JSON.parse(this.state.x_auth)
+        }
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('User ' + this.state.user_id + ' followed ' + this.state.profile_id)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+
+  unfollowUser () {
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.profile_id + '/follow',
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Authorization': JSON.parse(this.state.x_auth)
+        }
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('User ' + this.state.user_id + ' unfollowed ' + this.state.profile_id)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+
 }
 
 const styles = StyleSheet.create({

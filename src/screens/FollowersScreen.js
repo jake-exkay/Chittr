@@ -17,7 +17,7 @@ class FollowersScreen extends Component {
       isLoading: true,
       user_id: '',
       x_auth: '',
-      profile_id: '16',
+      profile_id: '2',
       followerList: []
     }
   }
@@ -84,6 +84,7 @@ class FollowersScreen extends Component {
           isLoading: false,
           followerList: responseJson
         })
+        console.log(this.state.followerList)
       })
       .catch((error) => {
         console.log(error)

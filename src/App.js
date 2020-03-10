@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
-import { Image, TouchableOpacity, StyleSheet, Button, FlatList, ActivityIndicator, Text, View } from 'react-native';
+import {
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Button,
+  FlatList,
+  ActivityIndicator,
+  Text,
+  View
+} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import {createStackNavigator} from 'react-navigation-stack';
@@ -12,6 +21,7 @@ import AddChitScreen from './screens/AddChitScreen';
 import FollowingScreen from './screens/FollowingScreen';
 import FollowersScreen from './screens/FollowersScreen';
 import AccountScreen from './screens/AccountScreen';
+import ChitScreen from './screens/ChitScreen';
 
 class NavigationDrawerStructure extends Component {
 
@@ -208,6 +218,28 @@ const AccountScreen_stack = createStackNavigator({
   },
 });
 
+const ChitScreen_stack = createStackNavigator({
+  //All the screen from the Screen3 will be indexed here
+  ChitScreen: {
+    screen: ChitScreen,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle: () => (
+        <Image
+          source = {require("../img/chittr_logo.png")}
+          style = {{width: 100, height: 50, marginLeft: 80}}
+        />
+      ),
+      headerLeft: () => (
+        <NavigationDrawerStructure navigationProps={navigation} />
+      ),
+      headerStyle: {
+        backgroundColor: '#12b2fd',
+      },
+      headerTintColor: '#fff',
+    }),
+  },
+});
+
 const DrawerNavigator = createDrawerNavigator({
   //Drawer Optons and indexing
   Home: {
@@ -264,6 +296,13 @@ const DrawerNavigator = createDrawerNavigator({
     screen: AccountScreen_stack,
     navigationOptions: {
       drawerLabel: 'Account',
+    },
+  },
+  ChitScreen: {
+    //Title
+    screen: ChitScreen_stack,
+    navigationOptions: {
+      drawerLabel: 'Chit',
     },
   },
 });
