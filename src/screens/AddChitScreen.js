@@ -85,7 +85,7 @@ class AddChitScreen extends Component {
   };
 
   addChit() {
-    var date = new Date().getDate();
+    var date = Date.parse(new Date());
 
     if (this.state.geotag == true) {
       return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
