@@ -95,14 +95,13 @@ class AddChitScreen extends Component {
            chit_content: this.state.chit_content,
            timestamp: date,
            location: {
-             longitude: this.state.longitude,
-             latitude: this.state.latitude
+             longitude: JSON.parse(this.state.longitude),
+             latitude: JSON.parse(this.state.latitude),
            }
-
          }),
          headers: {
            "Content-Type":"application/json",
-           "X-Authorization":this.state.x_auth,
+           "X-Authorization":JSON.parse(this.state.x_auth)
          }
      })
      .then((response) => {
@@ -117,11 +116,11 @@ class AddChitScreen extends Component {
          method: 'POST',
          body: JSON.stringify({
            chit_content: this.state.chit_content,
-           timestamp: date,
+           timestamp: date
          }),
          headers: {
            "Content-Type":"application/json",
-           "X-Authorization":this.state.x_auth,
+           "X-Authorization":JSON.parse(this.state.x_auth)
          }
      })
      .then((response) => {

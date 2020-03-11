@@ -40,8 +40,10 @@ class HomeScreen extends Component {
               onPress={() => this.logoutUser()}
             />
 
+            <Text style={styles.recentchits}>Recent Chits</Text>
+
             <FlatList
-              data={this.state.chitList}
+              data={this.state.chitList.reverse()}
               renderItem={({ item }) =>
                 <TouchableHighlight onPress={() => this.props.navigation.push('ChitScreen', {chitID:item.chit_id, chitContent:item.chit_content, userID:item.user.user_id})}>
                   <Text style={styles.chititem}>
@@ -59,6 +61,8 @@ class HomeScreen extends Component {
       } else {
         return (
           <View style={styles.view}>
+
+            <Text style={styles.recentchits}>Recent Chits</Text>
 
             <FlatList
               data={this.state.chitList}
@@ -154,12 +158,6 @@ const styles = StyleSheet.create({
   view: {
     marginTop: 10
   },
-  logo: {
-    width: 200,
-    height: 100,
-    justifyContent: 'center',
-    marginLeft: 105
-  },
   chititem: {
     margin: 5,
     padding: 20,
@@ -174,6 +172,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 50,
     marginTop: 50
+  },
+  recentchits: {
+    fontWeight: 'bold',
+    marginLeft: 25
   }
 })
 
