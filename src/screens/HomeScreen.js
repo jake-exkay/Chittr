@@ -23,6 +23,9 @@ class HomeScreen extends Component {
   }
 
   render () {
+
+    const { navigate } = this.props.navigation
+
     if (this.state.isLoading) {
       return (
         <View style={styles.view}>
@@ -40,12 +43,17 @@ class HomeScreen extends Component {
               onPress={() => this.logoutUser()}
             />
 
+            <Button
+              title='Add Chit'
+              onPress={() => navigate('AddChitScreen')}
+            />
+
             <Text style={styles.recentchits}>Recent Chits</Text>
 
             <FlatList
               data={this.state.chitList.reverse()}
               renderItem={({ item }) =>
-                <TouchableHighlight onPress={() => this.props.navigation.push('ChitScreen', {chitID:item.chit_id, chitContent:item.chit_content, userID:item.user.user_id})}>
+                <TouchableHighlight onPress={() => navigate('ChitScreen', {chitID:item.chit_id, chitContent:item.chit_content, userID:item.user.user_id})}>
                   <Text style={styles.chititem}>
                     <Text style={styles.chitheader}>{item.user.given_name} {item.user.family_name} says: {'\n'}</Text>
                     <Text style={styles.chitcontent}>{item.chit_content}</Text>
@@ -67,7 +75,7 @@ class HomeScreen extends Component {
             <FlatList
               data={this.state.chitList}
               renderItem={({ item }) =>
-                <TouchableHighlight onPress={() => this.props.navigation.navigate('ChitScreen')}>
+                <TouchableHighlight onPress={() => navigate('ChitScreen', {chitID:item.chit_id, chitContent:item.chit_content, userID:item.user.user_id})}>
                   <Text style={styles.chititem}>
                     <Text style={styles.chitheader}>{item.user.given_name} {item.user.family_name} says: {'\n'}</Text>
                     <Text style={styles.chitcontent}>{item.chit_content}</Text>

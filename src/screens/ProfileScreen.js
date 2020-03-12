@@ -22,6 +22,9 @@ class ProfileScreen extends Component {
   }
 
   render () {
+
+    const { navigate } = this.props.navigation
+
     // User not logged in
     if (this.state.user_id === false) {
       return (
@@ -31,12 +34,12 @@ class ProfileScreen extends Component {
 
           <TouchableOpacity
             title='Followers'
-            onPress={() => this.props.navigation.navigate('Followers')}
+            onPress={() => navigate('FollowersScreen', {userID:this.state.profile_id})}
           />
 
           <TouchableOpacity
             title='Following'
-            onPress={() => this.props.navigation.navigate('Following')}
+            onPress={() => navigate('FollowersScreen', {userID:this.state.profile_id})}
           />
 
         </View>
@@ -50,21 +53,21 @@ class ProfileScreen extends Component {
           <Text style={styles.username}>{this.state.given_name + ' ' + this.state.family_name}</Text>
 
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Account')}
+            onPress={() => navigate('AccountScreen')}
             style={styles.button}
           >
             <Text>Edit Account</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Followers')}
+            onPress={() => navigate('FollowersScreen', {userID:this.state.profile_id})}
             style={styles.button}
           >
             <Text>Followers</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Following')}
+            onPress={() => navigate('FollowersScreen', {userID:this.state.profile_id})}
             style={styles.button}
           >
             <Text>Following</Text>
@@ -88,14 +91,14 @@ class ProfileScreen extends Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Followers')}
+              onPress={() => navigate('FollowersScreen', {userID:this.state.profile_id})}
               style={styles.button}
             >
               <Text>Followers</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Following')}
+              onPress={() => navigate('FollowingScreen', {userID:this.state.profile_id})}
               style={styles.button}
             >
               <Text>Following</Text>
@@ -117,14 +120,14 @@ class ProfileScreen extends Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Followers')}
+              onPress={() => navigate('FollowersScreen', {userID:this.state.profile_id})}
               style={styles.button}
             >
               <Text>Followers</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Following')}
+            onPress={() => navigate('FollowingScreen', {userID:this.state.profile_id})}
               style={styles.button}
             >
               <Text>Following</Text>
@@ -138,6 +141,14 @@ class ProfileScreen extends Component {
   }
 
   componentDidMount () {
+    this.getParams()
+  }
+
+  getParams() {
+    const { params } = this.props.navigation.state
+    this.setState({
+      profile_id: params.userID,
+    })
     this.loadUser()
   }
 

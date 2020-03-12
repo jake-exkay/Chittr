@@ -23,288 +23,35 @@ import FollowersScreen from './screens/FollowersScreen';
 import AccountScreen from './screens/AccountScreen';
 import ChitScreen from './screens/ChitScreen';
 
-class NavigationDrawerStructure extends Component {
+class App extends Component {
 
-  toggleDrawer = () => {
-    this.props.navigationProps.toggleDrawer();
-  };
-
-  render() {
-    return (
-      <View style={{ flexDirection: 'row' }}>
-        <TouchableOpacity onPress={this.toggleDrawer.bind(this)}>
-          <Image
-            source={require('../img/drawer.png')}
-            style={{ width: 25, height: 25, marginLeft: 10 }}
-          />
-        </TouchableOpacity>
-      </View>
-    );
-  }
 }
 
-const HomeScreen_stack = createStackNavigator({
+const AppStackNav = createStackNavigator({
   Home: {
-    screen: HomeScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerTitle: () => (
-        <Image
-          source = {require("../img/chittr_logo.png")}
-          style = {{width: 100, height: 50, marginLeft: 80}}
-        />
-      ),
-      headerLeft: () => (
-        <NavigationDrawerStructure navigationProps={navigation} />
-      ),
-      headerStyle: {
-        backgroundColor: '#12b2fd',
-      },
-      headerTintColor: '#fff',
-    }),
+    screen: HomeScreen
   },
-});
-
-const LoginScreen_stack = createStackNavigator({
-  //All the screen from the Screen2 will be indexed here
-  Login: {
-    screen: LoginScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerTitle: () => (
-        <Image
-          source = {require("../img/chittr_logo.png")}
-          style = {{width: 100, height: 50, marginLeft: 80}}
-        />
-      ),
-      headerLeft: () => (
-        <NavigationDrawerStructure navigationProps={navigation} />
-      ),
-      headerStyle: {
-        backgroundColor: '#12b2fd',
-      },
-      headerTintColor: '#fff',
-    }),
+  ChitScreen: {
+    screen: ChitScreen
   },
-});
-
-const RegisterScreen_stack = createStackNavigator({
-  //All the screen from the Screen3 will be indexed here
-  Register: {
-    screen: RegisterScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerTitle: () => (
-        <Image
-          source = {require("../img/chittr_logo.png")}
-          style = {{width: 100, height: 50, marginLeft: 80}}
-        />
-      ),
-      headerLeft: () => (
-        <NavigationDrawerStructure navigationProps={navigation} />
-      ),
-      headerStyle: {
-        backgroundColor: '#12b2fd',
-      },
-      headerTintColor: '#fff',
-    }),
+  ProfileScreen: {
+    screen: ProfileScreen
   },
-});
-
-const ProfileScreen_stack = createStackNavigator({
-  //All the screen from the Screen3 will be indexed here
-  Profile: {
-    screen: ProfileScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerTitle: () => (
-        <Image
-          source = {require("../img/chittr_logo.png")}
-          style = {{width: 100, height: 50, marginLeft: 80}}
-        />
-      ),
-      headerLeft: () => (
-        <NavigationDrawerStructure navigationProps={navigation} />
-      ),
-      headerStyle: {
-        backgroundColor: '#12b2fd',
-      },
-      headerTintColor: '#fff',
-    }),
+  FollowersScreen: {
+    screen: FollowersScreen
   },
-});
-
-const FollowingScreen_stack = createStackNavigator({
-  //All the screen from the Screen3 will be indexed here
-  Following: {
-    screen: FollowingScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerTitle: () => (
-        <Image
-          source = {require("../img/chittr_logo.png")}
-          style = {{width: 100, height: 50, marginLeft: 80}}
-        />
-      ),
-      headerLeft: () => (
-        <NavigationDrawerStructure navigationProps={navigation} />
-      ),
-      headerStyle: {
-        backgroundColor: '#12b2fd',
-      },
-      headerTintColor: '#fff',
-    }),
+  FollowingScreen: {
+    screen: FollowingScreen
   },
-});
-
-const FollowersScreen_stack = createStackNavigator({
-  //All the screen from the Screen3 will be indexed here
-  Followers: {
-    screen: FollowersScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerTitle: () => (
-        <Image
-          source = {require("../img/chittr_logo.png")}
-          style = {{width: 100, height: 50, marginLeft: 80}}
-        />
-      ),
-      headerLeft: () => (
-        <NavigationDrawerStructure navigationProps={navigation} />
-      ),
-      headerStyle: {
-        backgroundColor: '#12b2fd',
-      },
-      headerTintColor: '#fff',
-    }),
+  AddChitScreen: {
+    screen: AddChitScreen
   },
-});
-
-const AddChitScreen_stack = createStackNavigator({
-  //All the screen from the Screen3 will be indexed here
-  AddChit: {
-    screen: AddChitScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerTitle: () => (
-        <Image
-          source = {require("../img/chittr_logo.png")}
-          style = {{width: 100, height: 50, marginLeft: 80}}
-        />
-      ),
-      headerLeft: () => (
-        <NavigationDrawerStructure navigationProps={navigation} />
-      ),
-      headerStyle: {
-        backgroundColor: '#12b2fd',
-      },
-      headerTintColor: '#fff',
-    }),
-  },
-});
-
-const AccountScreen_stack = createStackNavigator({
-  //All the screen from the Screen3 will be indexed here
   AccountScreen: {
-    screen: AccountScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerTitle: () => (
-        <Image
-          source = {require("../img/chittr_logo.png")}
-          style = {{width: 100, height: 50, marginLeft: 80}}
-        />
-      ),
-      headerLeft: () => (
-        <NavigationDrawerStructure navigationProps={navigation} />
-      ),
-      headerStyle: {
-        backgroundColor: '#12b2fd',
-      },
-      headerTintColor: '#fff',
-    }),
+    screen: AccountScreen
   },
-});
 
-const ChitScreen_stack = createStackNavigator({
-  //All the screen from the Screen3 will be indexed here
-  ChitScreen: {
-    screen: ChitScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerTitle: () => (
-        <Image
-          source = {require("../img/chittr_logo.png")}
-          style = {{width: 100, height: 50, marginLeft: 80}}
-        />
-      ),
-      headerLeft: () => (
-        <NavigationDrawerStructure navigationProps={navigation} />
-      ),
-      headerStyle: {
-        backgroundColor: '#12b2fd',
-      },
-      headerTintColor: '#fff',
-    }),
-  },
-});
+})
+const AppContainer = createAppContainer(AppStackNav)
 
-const DrawerNavigator = createDrawerNavigator({
-  //Drawer Optons and indexing
-  Home: {
-    //Title
-    screen: HomeScreen_stack,
-    navigationOptions: {
-      drawerLabel: 'Home',
-    },
-  },
-  Login: {
-    //Title
-    screen: LoginScreen_stack,
-    navigationOptions: {
-      drawerLabel: 'Login',
-    },
-  },
-  Register: {
-    //Title
-    screen: RegisterScreen_stack,
-    navigationOptions: {
-      drawerLabel: 'Register',
-    },
-  },
-  Profile: {
-    //Title
-    screen: ProfileScreen_stack,
-    navigationOptions: {
-      drawerLabel: 'Profile',
-    },
-  },
-  AddChit: {
-    //Title
-    screen: AddChitScreen_stack,
-    navigationOptions: {
-      drawerLabel: 'Add Chit',
-    },
-  },
-  Following: {
-    //Title
-    screen: FollowingScreen_stack,
-    navigationOptions: {
-      drawerLabel: 'Following',
-    },
-  },
-  Followers: {
-    //Title
-    screen: FollowersScreen_stack,
-    navigationOptions: {
-      drawerLabel: 'Followers',
-    },
-  },
-  Account: {
-    //Title
-    screen: AccountScreen_stack,
-    navigationOptions: {
-      drawerLabel: 'Account',
-    },
-  },
-  ChitScreen: {
-    //Title
-    screen: ChitScreen_stack,
-    navigationOptions: {
-      drawerLabel: 'Chit',
-    },
-  },
-});
 
-export default createAppContainer(DrawerNavigator);
+export default AppContainer

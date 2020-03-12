@@ -17,7 +17,7 @@ class FollowersScreen extends Component {
       isLoading: true,
       user_id: '',
       x_auth: '',
-      profile_id: '2',
+      profile_id: '',
       followerList: []
     }
   }
@@ -61,6 +61,14 @@ class FollowersScreen extends Component {
   }
 
   componentDidMount () {
+    this.getParams()
+  }
+
+  getParams() {
+    const { params } = this.props.navigation.state
+    this.setState({
+      profile_id: params.userID,
+    })
     this.loadUser()
   }
 
