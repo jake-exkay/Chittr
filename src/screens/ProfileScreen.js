@@ -55,6 +55,13 @@ class ProfileScreen extends Component {
 
           <Text style={styles.username}>{this.state.given_name + ' ' + this.state.family_name}</Text>
 
+          <Image
+            source={{
+              uri: ('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.profile_id + '/photo')
+            }}
+            style={styles.profilePicture}
+          />
+
           <View style={styles.buttonView}>
             <TouchableOpacity
               title='Followers'
@@ -117,6 +124,13 @@ class ProfileScreen extends Component {
 
             <Text style={styles.username}>{this.state.given_name + ' ' + this.state.family_name}</Text>
 
+            <Image
+              source={{
+                uri: ('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.profile_id + '/photo')
+              }}
+              style={styles.profilePicture}
+            />
+
             <View style={styles.buttonView}>
               <TouchableOpacity
                 onPress={() => this.followUser()}
@@ -147,6 +161,13 @@ class ProfileScreen extends Component {
           <View style={styles.mainView}>
 
             <Text style={styles.username}>{this.state.given_name + ' ' + this.state.family_name}</Text>
+
+            <Image
+              source={{
+                uri: ('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.profile_id + '/photo')
+              }}
+              style={styles.profilePicture}
+            />
 
             <View style={styles.buttonView}>
               <TouchableOpacity

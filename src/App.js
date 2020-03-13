@@ -22,6 +22,9 @@ import FollowingScreen from './screens/FollowingScreen';
 import FollowersScreen from './screens/FollowersScreen';
 import AccountScreen from './screens/AccountScreen';
 import ChitScreen from './screens/ChitScreen';
+import ScheduleScreen from './screens/ScheduleScreen';
+import DraftScreen from './screens/DraftScreen';
+
 
 class App extends Component {
 
@@ -55,6 +58,12 @@ const AppStackNav = createStackNavigator({
   LoginScreen: {
     screen: LoginScreen
   },
+  ScheduleScreen: {
+    screen: ScheduleScreen
+  },
+  DraftScreen: {
+    screen: DraftScreen
+  }
 
 })
 const AppContainer = createAppContainer(AppStackNav)

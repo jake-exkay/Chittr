@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 
-class AddChitScreen extends Component {
+class DraftScreen extends Component {
 
   constructor(props) {
     super(props);
@@ -21,10 +21,6 @@ class AddChitScreen extends Component {
       user_id: '',
       x_auth: '',
       chit_content: '',
-      longitude: null,
-      latitude: null,
-      locationPermission: false,
-      geotag: false
     };
   }
 
@@ -40,33 +36,7 @@ class AddChitScreen extends Component {
     }
   }
 
-  requestLocationPermission = async() => {
-     try {
-       const granted = await PermissionsAndroid.request(
-         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-         {
-           title: 'Chittr Location Permission',
-           message:
-           'This app requires access to your location.',
-           buttonNegative: 'Cancel',
-           buttonPositive: 'OK',
-         },
-       );
-
-       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-         console.log('Location access ON');
-         return true;
-       } else {
-         console.log('Location access OFF');
-         return false;
-       }
-     } catch (err) {
-       console.warn(err);
-     }
-  }
-
   componentDidMount() {
-    this.findCoordinates();
     this.loadUser();
   }
 
@@ -81,31 +51,6 @@ class AddChitScreen extends Component {
     });
     console.log("Loaded data from user ID: " + this.state.user_id + " and x-auth: " + this.state.x_auth);
   }
-
-  findCoordinates = () => {
-    if(!this.state.locationPermission){
-     this.state.locationPermission = this.requestLocationPermission();
-    }
-
-    Geolocation.getCurrentPosition(
-      (position) => {
-        const longitude = JSON.stringify(position.coords.longitude);
-        const latitude = JSON.stringify(position.coords.latitude);
-        this.setState({
-          longitude: longitude,
-          latitude: latitude
-        });
-      },
-      (error) => {
-        Alert.alert(error.message)
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge: 1000
-      }
-    );
-  };
 
   addChit() {
     var date = Date.parse(new Date());
@@ -161,54 +106,10 @@ class AddChitScreen extends Component {
   }
 
   render() {
-
-    const { navigate } = this.props.navigation
-
     return (
       <View style = {styles.view}>
 
-        <TextInput
-          style = {styles.textinput}
-          placeholder = "Chit"
-          onChangeText = {this.handleChitContent}
-        />
-
-        <View style = {styles.checkbox}>
-          <CheckBox
-            title = "Add Geotag"
-            value = {this.state.geotag}
-            onValueChange = {() => this.setState({geotag: !this.state.geotag})}
-          />
-          <Text style = {styles.checkboxtext}>Add Geotag?</Text>
-        </View>
-
-        <TouchableOpacity
-          onPress = {() => this.addChit()}
-          style = {styles.button}
-        >
-          <Text>Post</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress = {() => this.saveToDrafts()}
-          style = {styles.button}
-        >
-          <Text>Save to Drafts</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => navigate('DraftScreen')}
-          style = {styles.button}
-        >
-          <Text>View Drafts</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => navigate('ScheduleScreen', {chit_content:this.state.chit_content})}
-          style = {styles.button}
-        >
-          <Text>Schedule</Text>
-        </TouchableOpacity>
+        
 
       </View>
     );
@@ -259,4 +160,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default AddChitScreen;
+export default DraftScreen;

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 
-class AddChitScreen extends Component {
+class ScheduleScreen extends Component {
 
   constructor(props) {
     super(props);
@@ -161,53 +161,14 @@ class AddChitScreen extends Component {
   }
 
   render() {
-
-    const { navigate } = this.props.navigation
-
     return (
       <View style = {styles.view}>
-
-        <TextInput
-          style = {styles.textinput}
-          placeholder = "Chit"
-          onChangeText = {this.handleChitContent}
-        />
-
-        <View style = {styles.checkbox}>
-          <CheckBox
-            title = "Add Geotag"
-            value = {this.state.geotag}
-            onValueChange = {() => this.setState({geotag: !this.state.geotag})}
-          />
-          <Text style = {styles.checkboxtext}>Add Geotag?</Text>
-        </View>
 
         <TouchableOpacity
           onPress = {() => this.addChit()}
           style = {styles.button}
         >
           <Text>Post</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress = {() => this.saveToDrafts()}
-          style = {styles.button}
-        >
-          <Text>Save to Drafts</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => navigate('DraftScreen')}
-          style = {styles.button}
-        >
-          <Text>View Drafts</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => navigate('ScheduleScreen', {chit_content:this.state.chit_content})}
-          style = {styles.button}
-        >
-          <Text>Schedule</Text>
         </TouchableOpacity>
 
       </View>
@@ -259,4 +220,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default AddChitScreen;
+export default ScheduleScreen;

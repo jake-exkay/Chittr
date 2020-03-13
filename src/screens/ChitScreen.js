@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {
+  TouchableOpacity,
   Image,
   TouchableHighlight,
   AsyncStorage,
@@ -11,6 +12,8 @@ import {
   Text,
   View
 } from 'react-native'
+import { RNCamera } from 'react-native-camera';
+
 
 class ChitScreen extends Component {
   constructor (props) {
@@ -52,16 +55,65 @@ class ChitScreen extends Component {
       )
     } else {
       if (this.state.chit_id) {
-        return (
-          <View style={styles.mainView}>
+        if (this.state.posted_user_id == this.state.user_id) {
+          return (
+            <View style={styles.mainView}>
 
-            <Text style={styles.chitItem}>{this.state.chit_content}</Text>
+              <Text style={styles.chitItem}>{this.state.chit_content}</Text>
 
-            <TouchableHighlight onPress={() => navigate('ProfileScreen', {userID:this.state.posted_user_id})}>
-              <Text style={styles.chitItem}>Posted By: {this.state.given_name} {this.state.family_name}</Text>
-            </TouchableHighlight>
-          </View>
-        )
+              <Image
+                source={{
+                  uri: ('http://10.0.2.2:3333/api/v0.0.5/chits/' + this.state.chit_id + '/photo')
+                }}
+                style={styles.chitPicture}
+              />
+
+              <TouchableHighlight onPress={() => navigate('ProfileScreen', {userID:this.state.posted_user_id})}>
+                <Text style={styles.chitItem}>Posted By: {this.state.given_name} {this.state.family_name}</Text>
+              </TouchableHighlight>
+
+              <RNCamera
+                ref={ref => {
+                  this.camera = ref;
+                }}
+                style={styles.capture}
+              />
+
+              <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
+
+                <TouchableOpacity
+                  onPress = {this.takePicture.bind(this)}
+                  style =  {styles.capture}
+                >
+                <Text style={styles.takePictureText}>
+                  Take Picture
+                </Text>
+                </TouchableOpacity>
+
+              </View>
+
+
+            </View>
+          )
+        } else {
+          return (
+            <View style={styles.mainView}>
+
+              <Text style={styles.chitItem}>{this.state.chit_content}</Text>
+
+              <Image
+                source={{
+                  uri: ('http://10.0.2.2:3333/api/v0.0.5/chits/' + this.state.chit_id + '/photo')
+                }}
+                style={styles.chitPicture}
+              />
+
+              <TouchableHighlight onPress={() => navigate('ProfileScreen', {userID:this.state.posted_user_id})}>
+                <Text style={styles.chitItem}>Posted By: {this.state.given_name} {this.state.family_name}</Text>
+              </TouchableHighlight>
+            </View>
+          )
+        }
       } else {
         return (
           <View style={styles.mainView}>
@@ -90,6 +142,17 @@ class ChitScreen extends Component {
     this.getUserData(params.userID)
   }
 
+  async loadUser () {
+    const userId = await AsyncStorage.getItem('user_id')
+    const parsedUserId = await JSON.parse(userId)
+    const xAuth = await AsyncStorage.getItem('x_auth')
+    const parsedXAuth = await JSON.parse(xAuth)
+    this.setState({
+      x_auth: parsedXAuth,
+      user_id: parsedUserId
+    })
+  }
+
   getUserData (postedID) {
     return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + postedID)
       .then((response) => response.json())
@@ -98,11 +161,37 @@ class ChitScreen extends Component {
           given_name: responseJson.given_name,
           family_name: responseJson.family_name
         })
+        this.loadUser()
       })
       .catch((error) => {
         console.log(error)
       })
   }
+
+  takePicture = async() => {
+    if(this.camera) {
+      const options = { quality: 0.5, base64: true };
+      const data = await this.camera.takePictureAsync(options);
+
+      console.log(data.uri);
+
+      return fetch("http://10.0.2.2:3333/api/v0.0.5/chits/" + this.state.chit_id + "/photo",
+      {
+         method: 'POST',
+         body: data,
+         headers: {
+           "Content-Type":"image/jpeg",
+           "X-Authorization":JSON.parse(this.state.x_auth),
+         }
+     })
+     .then((response) => {
+       Alert.alert("Photo Updated!");
+     })
+     .catch((error) => {
+       console.error(error);
+     });
+    }
+  };
 
 }
 
@@ -124,6 +213,34 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#e6ffff',
     elevation: 2
+  },
+  container: {
+    flex: 1,
+    flexDirection: 'column'
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  capture: {
+    flex: 1,
+    padding: 15,
+    alignSelf: 'center',
+    paddingTop: 150
+  },
+  chitPicture: {
+    width: 200,
+    height: 200,
+    marginLeft: 113,
+    borderRadius: 5,
+    marginBottom: 5,
+    marginTop: 5
+  },
+  takePictureText: {
+    flex: 1,
+    fontSize: 20,
+    paddingBottom: 100
   }
 })
 
