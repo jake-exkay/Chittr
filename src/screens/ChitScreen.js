@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {
+  Image,
   TouchableHighlight,
   AsyncStorage,
   Alert,
@@ -26,32 +27,44 @@ class ChitScreen extends Component {
     }
   }
 
+  static navigationOptions = {
+    headerTitle: () => (
+        <Image
+          source = {require("../../img/chittr_logo.png")}
+          style = {{width: 100, height: 50, marginLeft: 85}}
+        />
+      ),
+    headerStyle: {
+      backgroundColor: '#29a9ff'
+    }
+  }
+
   render () {
 
     const { navigate } = this.props.navigation
 
     if (this.state.isLoading) {
       return (
-        <View style={styles.view}>
-          <Text style={styles.loadingtext}>Loading Chit...</Text>
+        <View style={styles.mainView}>
+          <Text style={styles.loadingText}>Loading Chit...</Text>
           <ActivityIndicator />
         </View>
       )
     } else {
       if (this.state.chit_id) {
         return (
-          <View style={styles.view}>
+          <View style={styles.mainView}>
 
-            <Text style={styles.chititem}>{this.state.chit_content}</Text>
+            <Text style={styles.chitItem}>{this.state.chit_content}</Text>
 
             <TouchableHighlight onPress={() => navigate('ProfileScreen', {userID:this.state.posted_user_id})}>
-              <Text style={styles.chititem}>Posted By: {this.state.given_name} {this.state.family_name}</Text>
+              <Text style={styles.chitItem}>Posted By: {this.state.given_name} {this.state.family_name}</Text>
             </TouchableHighlight>
           </View>
         )
       } else {
         return (
-          <View style={styles.view}>
+          <View style={styles.mainView}>
 
             <Text>Chit not found</Text>
 
@@ -94,38 +107,23 @@ class ChitScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#c7ddf5',
-    padding: 10,
-    marginLeft: 100,
-    marginRight: 100,
-    borderRadius: 3,
-    elevation: 2
+  loadingText: {
+    textAlign: 'center',
+    marginBottom: 50,
+    marginTop: 50
   },
-  view: {
-    marginTop: 10
+  mainView: {
+    flex: 1,
+    flexDirection: 'column',
+    marginTop: 10,
+    backgroundColor: '#fcfbe4'
   },
-  logo: {
-    width: 200,
-    height: 100,
-    justifyContent: 'center',
-    marginLeft: 105
-  },
-  chititem: {
+  chitItem: {
     margin: 5,
     padding: 20,
     borderRadius: 10,
     backgroundColor: '#e6ffff',
     elevation: 2
-  },
-  chitheader: {
-    fontWeight: 'bold'
-  },
-  loadingtext: {
-    textAlign: 'center',
-    marginBottom: 50,
-    marginTop: 50
   }
 })
 

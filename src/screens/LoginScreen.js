@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
-import { AsyncStorage, StyleSheet, TextInput, TouchableOpacity, Alert, Text, View } from 'react-native';
+import {
+  Image,
+  AsyncStorage,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  Text,
+  View
+} from 'react-native';
 
 class LoginScreen extends Component {
 
@@ -10,6 +19,18 @@ class LoginScreen extends Component {
       password: '',
       user_id: '',
       x_auth: '',
+    }
+  }
+
+  static navigationOptions = {
+    headerTitle: () => (
+        <Image
+          source = {require("../../img/chittr_logo.png")}
+          style = {{width: 100, height: 50, marginLeft: 85}}
+        />
+      ),
+    headerStyle: {
+      backgroundColor: '#29a9ff'
     }
   }
 

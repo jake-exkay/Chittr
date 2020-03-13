@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, Alert, TouchableOpacity, TextInput, Text, View } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+  TextInput,
+  Text,
+  View
+} from 'react-native';
 
 class RegisterScreen extends Component {
 
@@ -11,6 +19,18 @@ class RegisterScreen extends Component {
       email: '',
       password: ''
     };
+  }
+
+  static navigationOptions = {
+    headerTitle: () => (
+        <Image
+          source = {require("../../img/chittr_logo.png")}
+          style = {{width: 100, height: 50, marginLeft: 85}}
+        />
+      ),
+    headerStyle: {
+      backgroundColor: '#29a9ff'
+    }
   }
 
   render() {

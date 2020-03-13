@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {
+  Image,
   AsyncStorage,
   StyleSheet,
   TouchableOpacity,
@@ -19,6 +20,18 @@ class FollowersScreen extends Component {
       x_auth: '',
       profile_id: '',
       followerList: []
+    }
+  }
+
+  static navigationOptions = {
+    headerTitle: () => (
+        <Image
+          source = {require("../../img/chittr_logo.png")}
+          style = {{width: 100, height: 50, marginLeft: 85}}
+        />
+      ),
+    headerStyle: {
+      backgroundColor: '#29a9ff'
     }
   }
 

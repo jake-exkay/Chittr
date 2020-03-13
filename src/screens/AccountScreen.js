@@ -1,5 +1,16 @@
 import React, { Component } from 'react';
-import { AsyncStorage, TextInput, Alert, Header, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Text, View } from 'react-native';
+import {
+  Image,
+  AsyncStorage,
+  TextInput,
+  Alert,
+  Header,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+  Text,
+  View } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 
 class AccountScreen extends Component {
@@ -14,6 +25,18 @@ class AccountScreen extends Component {
       family_name: '',
       email: '',
       password: '',
+    }
+  }
+
+  static navigationOptions = {
+    headerTitle: () => (
+        <Image
+          source = {require("../../img/chittr_logo.png")}
+          style = {{width: 100, height: 50, marginLeft: 85}}
+        />
+      ),
+    headerStyle: {
+      backgroundColor: '#29a9ff'
     }
   }
 
@@ -142,12 +165,10 @@ class AccountScreen extends Component {
       return fetch("http://10.0.2.2:3333/api/v0.0.5/user/photo",
       {
          method: 'POST',
-         body: JSON.stringify({
-
-         }),
+         body: data,
          headers: {
            "Content-Type":"image/jpeg",
-           "X-Authorization":this.state.x_auth,
+           "X-Authorization":JSON.parse(this.state.x_auth),
          }
      })
      .then((response) => {
@@ -284,7 +305,6 @@ const styles = StyleSheet.create({
     padding: 15,
     paddingHorizontal: 20,
     alignSelf: 'center',
-    margin: 20,
   }
 });
 

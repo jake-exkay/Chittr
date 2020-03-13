@@ -1,5 +1,16 @@
 import React, { Component } from 'react';
-import { AsyncStorage, CheckBox, PermissionsAndroid, Image, StyleSheet, Alert, TouchableOpacity, TextInput, Text, View } from 'react-native';
+import {
+  AsyncStorage,
+  CheckBox,
+  PermissionsAndroid,
+  Image,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+  TextInput,
+  Text,
+  View
+} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 
 class AddChitScreen extends Component {
@@ -15,6 +26,18 @@ class AddChitScreen extends Component {
       locationPermission: false,
       geotag: false
     };
+  }
+
+  static navigationOptions = {
+    headerTitle: () => (
+        <Image
+          source = {require("../../img/chittr_logo.png")}
+          style = {{width: 100, height: 50, marginLeft: 85}}
+        />
+      ),
+    headerStyle: {
+      backgroundColor: '#29a9ff'
+    }
   }
 
   requestLocationPermission = async() => {

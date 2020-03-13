@@ -49,6 +49,12 @@ const AppStackNav = createStackNavigator({
   AccountScreen: {
     screen: AccountScreen
   },
+  RegisterScreen: {
+    screen: RegisterScreen
+  },
+  LoginScreen: {
+    screen: LoginScreen
+  },
 
 })
 const AppContainer = createAppContainer(AppStackNav)

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import {
+  Image,
+  TouchableOpacity,
   TouchableHighlight,
   AsyncStorage,
   Alert,
@@ -22,41 +24,59 @@ class HomeScreen extends Component {
     }
   }
 
+  static navigationOptions = {
+    headerTitle: () => (
+        <Image
+          source = {require("../../img/chittr_logo.png")}
+          style = {{width: 100, height: 50, marginLeft: 140}}
+        />
+      ),
+    headerStyle: {
+      backgroundColor: '#29a9ff'
+    }
+  }
+
   render () {
 
     const { navigate } = this.props.navigation
 
     if (this.state.isLoading) {
       return (
-        <View style={styles.view}>
-          <Text style={styles.loadingtext}>Loading Chits...</Text>
+        <View style={styles.mainView}>
+          <Text style={styles.loadingText}>Loading Chits...</Text>
           <ActivityIndicator />
         </View>
       )
     } else {
       if (this.state.user_id) {
         return (
-          <View style={styles.view}>
+          <View style={styles.mainView}>
 
-            <Button
-              title='Logout'
-              onPress={() => this.logoutUser()}
-            />
+            <View style={styles.buttonView}>
+              <TouchableOpacity
+                onPress = {() => this.logoutUser()}
+                style = {styles.topButton}
+              >
+                <Text>Logout</Text>
+              </TouchableOpacity>
 
-            <Button
-              title='Add Chit'
-              onPress={() => navigate('AddChitScreen')}
-            />
+              <TouchableOpacity
+                onPress = {() => navigate('AddChitScreen')}
+                style = {styles.topButton}
+              >
+                <Text>Add Chit</Text>
+              </TouchableOpacity>
+            </View>
 
-            <Text style={styles.recentchits}>Recent Chits</Text>
+            <Text style={styles.recentChits}>Recent Chits</Text>
 
             <FlatList
               data={this.state.chitList.reverse()}
               renderItem={({ item }) =>
                 <TouchableHighlight onPress={() => navigate('ChitScreen', {chitID:item.chit_id, chitContent:item.chit_content, userID:item.user.user_id})}>
-                  <Text style={styles.chititem}>
-                    <Text style={styles.chitheader}>{item.user.given_name} {item.user.family_name} says: {'\n'}</Text>
-                    <Text style={styles.chitcontent}>{item.chit_content}</Text>
+                  <Text style={styles.chitItem}>
+                    <Text style={styles.chitHeader}>{item.user.given_name} {item.user.family_name} says: {'\n'}</Text>
+                    <Text>{item.chit_content}</Text>
                   </Text>
                 </TouchableHighlight>
               }
@@ -68,17 +88,36 @@ class HomeScreen extends Component {
         )
       } else {
         return (
-          <View style={styles.view}>
+          <View style={styles.mainView}>
 
-            <Text style={styles.recentchits}>Recent Chits</Text>
+
+            <View style={styles.buttonView}>
+
+            <TouchableOpacity
+              onPress = {() => navigate('LoginScreen')}
+              style = {styles.topButton}
+            >
+              <Text>Login</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress = {() => navigate('RegisterScreen')}
+              style = {styles.topButton}
+            >
+              <Text>Register</Text>
+            </TouchableOpacity>
+
+            </View>
+
+            <Text style={styles.recentChits}>Recent Chits</Text>
 
             <FlatList
               data={this.state.chitList}
               renderItem={({ item }) =>
                 <TouchableHighlight onPress={() => navigate('ChitScreen', {chitID:item.chit_id, chitContent:item.chit_content, userID:item.user.user_id})}>
-                  <Text style={styles.chititem}>
-                    <Text style={styles.chitheader}>{item.user.given_name} {item.user.family_name} says: {'\n'}</Text>
-                    <Text style={styles.chitcontent}>{item.chit_content}</Text>
+                  <Text style={styles.chitItem}>
+                    <Text style={styles.chitHeader}>{item.user.given_name} {item.user.family_name} says: {'\n'}</Text>
+                    <Text>{item.chit_content}</Text>
                   </Text>
                 </TouchableHighlight>
               }
@@ -154,36 +193,45 @@ class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#c7ddf5',
-    padding: 10,
-    marginLeft: 100,
-    marginRight: 100,
-    borderRadius: 3,
-    elevation: 2
+  loadingText: {
+    textAlign: 'center',
+    marginBottom: 50,
+    marginTop: 50
   },
-  view: {
+  mainView: {
+    flex: 1,
+    flexDirection: 'column',
+    marginTop: 10,
+    backgroundColor: '#fcfbe4'
+  },
+  buttonView: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     marginTop: 10
   },
-  chititem: {
+  topButton: {
+    backgroundColor: '#e6ffff',
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 5,
+    paddingBottom: 5,
+    elevation: 5,
+    borderRadius: 10
+  },
+  recentChits: {
+    fontWeight: 'bold',
+    paddingTop: 20,
+    textAlign: 'center'
+  },
+  chitItem: {
     margin: 5,
     padding: 20,
     borderRadius: 10,
     backgroundColor: '#e6ffff',
     elevation: 2
   },
-  chitheader: {
+  chitHeader: {
     fontWeight: 'bold'
-  },
-  loadingtext: {
-    textAlign: 'center',
-    marginBottom: 50,
-    marginTop: 50
-  },
-  recentchits: {
-    fontWeight: 'bold',
-    marginLeft: 25
   }
 })
 
