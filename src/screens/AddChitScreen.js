@@ -203,13 +203,6 @@ class AddChitScreen extends Component {
           <Text>View Drafts</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => navigate('ScheduleScreen', {chit_content:this.state.chit_content})}
-          style = {styles.button}
-        >
-          <Text>Schedule</Text>
-        </TouchableOpacity>
-
       </View>
     );
   }

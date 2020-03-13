@@ -11,7 +11,6 @@ import {
   ActivityIndicator,
   Text,
   View } from 'react-native';
-import { RNCamera } from 'react-native-camera';
 
 class AccountScreen extends Component {
 
@@ -57,6 +56,9 @@ class AccountScreen extends Component {
   }
 
   render() {
+
+    const { navigate } = this.props.navigation
+
     return (
       <View style={styles.container}>
         <Text style={styles.accountheader}>Update Account</Text>
@@ -114,26 +116,13 @@ class AccountScreen extends Component {
           <Text>Update Last Name</Text>
         </TouchableOpacity>
 
-        <RNCamera
-          ref={ref => {
-            this.camera = ref;
-          }}
-          style={styles.capture}
-        />
-
-        <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
-
-          <TouchableOpacity
-            onPress = {this.takePicture.bind(this)}
-            style =  {styles.capture}
-          >
-          <Text style={{ fontSize: 16 }}>
-            Take Picture
-          </Text>
-          </TouchableOpacity>
-
-        </View>
-
+        <TouchableOpacity
+          onPress = {() => navigate('ChangePictureScreen')}
+          style = {styles.button}
+        >
+          <Text>Change Profile Picture</Text>
+        </TouchableOpacity>
+        
       </View>
     );
 
@@ -154,31 +143,6 @@ class AccountScreen extends Component {
     });
     console.log("Loaded data from user ID: " + this.state.user_id + " and x-auth: " + this.state.x_auth);
   }
-
-  takePicture = async() => {
-    if(this.camera) {
-      const options = { quality: 0.5, base64: true };
-      const data = await this.camera.takePictureAsync(options);
-
-      console.log(data.uri);
-
-      return fetch("http://10.0.2.2:3333/api/v0.0.5/user/photo",
-      {
-         method: 'POST',
-         body: data,
-         headers: {
-           "Content-Type":"image/jpeg",
-           "X-Authorization":JSON.parse(this.state.x_auth),
-         }
-     })
-     .then((response) => {
-       Alert.alert("Photo Updated!");
-     })
-     .catch((error) => {
-       console.error(error);
-     });
-    }
-  };
 
   updateFamilyName() {
     return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id,

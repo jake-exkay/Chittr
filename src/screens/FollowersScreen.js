@@ -44,7 +44,7 @@ class FollowersScreen extends Component {
         </View>
       )
     } else {
-      if (this.state.followerList && this.state.followerList.length < 0) {
+      if (this.state.followerList.length < 0) {
         return (
           <View style={styles.view}>
             <Text style={styles.nofollowers}>This user does not have any followers!</Text>

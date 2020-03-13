@@ -24,6 +24,8 @@ import AccountScreen from './screens/AccountScreen';
 import ChitScreen from './screens/ChitScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
 import DraftScreen from './screens/DraftScreen';
+import ChangePictureScreen from './screens/ChangePictureScreen';
+
 
 
 class App extends Component {
@@ -63,6 +65,9 @@ const AppStackNav = createStackNavigator({
   },
   DraftScreen: {
     screen: DraftScreen
+  },
+  ChangePictureScreen: {
+    screen: ChangePictureScreen
   }
 
 })
