@@ -61,6 +61,13 @@ class HomeScreen extends Component {
               </TouchableOpacity>
 
               <TouchableOpacity
+                onPress = {() => navigate('ProfileScreen', {userID:this.state.user_id})}
+                style = {styles.topButton}
+              >
+                <Text>Profile</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
                 onPress = {() => navigate('AddChitScreen')}
                 style = {styles.topButton}
               >
