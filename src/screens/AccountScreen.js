@@ -68,24 +68,24 @@ class AccountScreen extends Component {
     const { navigate } = this.props.navigation
 
     return (
-      <View style={styles.mainView}>
+      <View style={styles.mainView} accessible={true}>
         <Text style={styles.accountHeader}>Update Account</Text>
 
         <TextInput
           placeholder='Email'
           onChangeText={this.handleEmail}
           style={styles.textEntry}
-          accessibilityLabel="Email Address"
-          accessibilityHint="Enter new email address"
-          accessibilityRole="keyboardkey"
+          accessibilityLabel='Email Address'
+          accessibilityHint='Enter new email address'
+          accessibilityRole='keyboardkey'
         />
 
         <TouchableOpacity
           onPress={() => this.updateEmail()}
           style={styles.button}
-          accessibilityLabel="Update email"
-          accessibilityHint="Press the button to change email address"
-          accessibilityRole="button"
+          accessibilityLabel='Update email'
+          accessibilityHint='Press the button to change email address'
+          accessibilityRole='button'
         >
           <Text>Update Email</Text>
         </TouchableOpacity>
@@ -95,17 +95,17 @@ class AccountScreen extends Component {
           onChangeText={this.handlePassword}
           style={styles.textEntry}
           secureTextEntry={true}
-          accessibilityLabel="Password"
-          accessibilityHint="Enter new password"
-          accessibilityRole="keyboardkey"
+          accessibilityLabel='Password'
+          accessibilityHint='Enter new password'
+          accessibilityRole='keyboardkey'
         />
 
         <TouchableOpacity
           onPress={() => this.updatePassword()}
           style={styles.button}
-          accessibilityLabel="Update password"
-          accessibilityHint="Press the button to change password"
-          accessibilityRole="button"
+          accessibilityLabel='Update password'
+          accessibilityHint='Press the button to change password'
+          accessibilityRole='button'
         >
           <Text>Update Password</Text>
         </TouchableOpacity>
@@ -114,17 +114,17 @@ class AccountScreen extends Component {
           placeholder='First Name'
           onChangeText={this.handleFirstName}
           style={styles.textEntry}
-          accessibilityLabel="First Name"
-          accessibilityHint="Enter new first name"
-          accessibilityRole="keyboardkey"
+          accessibilityLabel='First Name'
+          accessibilityHint='Enter new first name'
+          accessibilityRole='keyboardkey'
         />
 
         <TouchableOpacity
           onPress={() => this.updateGivenName()}
           style={styles.button}
-          accessibilityLabel="Update first name"
-          accessibilityHint="Press the button to change first name"
-          accessibilityRole="button"
+          accessibilityLabel='Update first name'
+          accessibilityHint='Press the button to change first name'
+          accessibilityRole='button'
         >
           <Text>Update First Name</Text>
         </TouchableOpacity>
@@ -133,17 +133,17 @@ class AccountScreen extends Component {
           placeholder='Last Name'
           onChangeText={this.handleLastName}
           style={styles.textEntry}
-          accessibilityLabel="Last Name"
-          accessibilityHint="Enter new last name"
-          accessibilityRole="keyboardkey"
+          accessibilityLabel='Last Name'
+          accessibilityHint='Enter new last name'
+          accessibilityRole='keyboardkey'
         />
 
         <TouchableOpacity
           onPress={() => this.updateFamilyName()}
           style={styles.button}
-          accessibilityLabel="Update last name"
-          accessibilityHint="Press the button to change last name"
-          accessibilityRole="button"
+          accessibilityLabel='Update last name'
+          accessibilityHint='Press the button to change last name'
+          accessibilityRole='button'
         >
           <Text>Update Last Name</Text>
         </TouchableOpacity>
@@ -151,9 +151,9 @@ class AccountScreen extends Component {
         <TouchableOpacity
           onPress={() => navigate('ChangePictureScreen')}
           style={styles.button}
-          accessibilityLabel="Change Profile Picture"
-          accessibilityHint="Press the button to access the change profile picture screen"
-          accessibilityRole="button"
+          accessibilityLabel='Change Profile Picture'
+          accessibilityHint='Press the button to access the change profile picture screen'
+          accessibilityRole='button'
         >
           <Text>Change Profile Picture</Text>
         </TouchableOpacity>

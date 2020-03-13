@@ -59,9 +59,9 @@ class AddChitScreen extends Component {
           style={styles.textEntry}
           placeholder='Compose a Chit...'
           onChangeText={this.handleChitContent}
-          accessibilityLabel="Chit Content"
-          accessibilityHint="Enter chit content here"
-          accessibilityRole="keyboardkey"
+          accessibilityLabel='Chit Content'
+          accessibilityHint='Enter chit content here'
+          accessibilityRole='keyboardkey'
         />
 
         <View style={styles.checkBox}>
@@ -69,9 +69,9 @@ class AddChitScreen extends Component {
             title='Add Geotag'
             value={this.state.geotag}
             onValueChange={() => this.setState( {geotag: !this.state.geotag} )}
-            accessibilityLabel="Add Geotag"
-            accessibilityHint="Select this checkbox to add a geotag to your chit"
-            accessibilityRole="checkbox"
+            accessibilityLabel='Add Geotag'
+            accessibilityHint='Select this checkbox to add a geotag to your chit'
+            accessibilityRole='checkbox'
           />
           <Text style={styles.checkBoxText}>Add Geotag?</Text>
         </View>
@@ -79,9 +79,9 @@ class AddChitScreen extends Component {
         <TouchableOpacity
           onPress={() => this.addChit()}
           style={styles.button}
-          accessibilityLabel="Post Chit"
-          accessibilityHint="Press the button to post the chit"
-          accessibilityRole="button"
+          accessibilityLabel='Post Chit'
+          accessibilityHint='Press the button to post the chit'
+          accessibilityRole='button'
         >
           <Text>Post</Text>
         </TouchableOpacity>
@@ -89,9 +89,9 @@ class AddChitScreen extends Component {
         <TouchableOpacity
           onPress={() => this.saveToDrafts()}
           style={styles.button}
-          accessibilityLabel="Save to drafts"
-          accessibilityHint="Press the button to save the chit to your drafts"
-          accessibilityRole="button"
+          accessibilityLabel='Save to drafts'
+          accessibilityHint='Press the button to save the chit to your drafts'
+          accessibilityRole='button'
         >
           <Text>Save to Drafts</Text>
         </TouchableOpacity>
@@ -99,9 +99,9 @@ class AddChitScreen extends Component {
         <TouchableOpacity
           onPress={() => navigate('DraftScreen')}
           style={styles.button}
-          accessibilityLabel="View drafts"
-          accessibilityHint="Press the button to view a list of your current drafts"
-          accessibilityRole="button"
+          accessibilityLabel='View drafts'
+          accessibilityHint='Press the button to view a list of your current drafts'
+          accessibilityRole='button'
         >
           <Text>View Drafts</Text>
         </TouchableOpacity>
