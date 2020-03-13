@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   topButton: {
-    backgroundColor: '#e6ffff',
+    backgroundColor: '#c7ddf5',
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 5,
