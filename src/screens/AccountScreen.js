@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {
+  Image,
   AsyncStorage,
   TextInput,
   Alert,
@@ -9,6 +10,9 @@ import {
   View
 } from 'react-native'
 
+// Component used to edit user account details. The component contains text inputs and buttons for updating
+// email address, password, first name and last name. The component also includes a button which links
+// to another screen, used for updating the users' profile picture.
 class AccountScreen extends Component {
   constructor (props) {
     super(props)
@@ -26,7 +30,7 @@ class AccountScreen extends Component {
   static navigationOptions = {
     headerTitle: () => (
       <Image
-        source = {require("../../img/chittr_logo.png")}
+        source = {require('../../img/chittr_logo.png')}
         style = {{width: 100, height: 50, marginLeft: 85}}
       />
     ),
@@ -59,6 +63,7 @@ class AccountScreen extends Component {
     })
   }
 
+  // Renders data on screen, text inputs and buttons for changing user data.
   render () {
     const { navigate } = this.props.navigation
 
@@ -70,11 +75,17 @@ class AccountScreen extends Component {
           placeholder='Email'
           onChangeText={this.handleEmail}
           style={styles.textEntry}
+          accessibilityLabel="Email Address"
+          accessibilityHint="Enter new email address"
+          accessibilityRole="keyboardkey"
         />
 
         <TouchableOpacity
           onPress={() => this.updateEmail()}
           style={styles.button}
+          accessibilityLabel="Update email"
+          accessibilityHint="Press the button to change email address"
+          accessibilityRole="button"
         >
           <Text>Update Email</Text>
         </TouchableOpacity>
@@ -84,11 +95,17 @@ class AccountScreen extends Component {
           onChangeText={this.handlePassword}
           style={styles.textEntry}
           secureTextEntry={true}
+          accessibilityLabel="Password"
+          accessibilityHint="Enter new password"
+          accessibilityRole="keyboardkey"
         />
 
         <TouchableOpacity
           onPress={() => this.updatePassword()}
           style={styles.button}
+          accessibilityLabel="Update password"
+          accessibilityHint="Press the button to change password"
+          accessibilityRole="button"
         >
           <Text>Update Password</Text>
         </TouchableOpacity>
@@ -97,11 +114,17 @@ class AccountScreen extends Component {
           placeholder='First Name'
           onChangeText={this.handleFirstName}
           style={styles.textEntry}
+          accessibilityLabel="First Name"
+          accessibilityHint="Enter new first name"
+          accessibilityRole="keyboardkey"
         />
 
         <TouchableOpacity
           onPress={() => this.updateGivenName()}
           style={styles.button}
+          accessibilityLabel="Update first name"
+          accessibilityHint="Press the button to change first name"
+          accessibilityRole="button"
         >
           <Text>Update First Name</Text>
         </TouchableOpacity>
@@ -110,11 +133,17 @@ class AccountScreen extends Component {
           placeholder='Last Name'
           onChangeText={this.handleLastName}
           style={styles.textEntry}
+          accessibilityLabel="Last Name"
+          accessibilityHint="Enter new last name"
+          accessibilityRole="keyboardkey"
         />
 
         <TouchableOpacity
           onPress={() => this.updateFamilyName()}
           style={styles.button}
+          accessibilityLabel="Update last name"
+          accessibilityHint="Press the button to change last name"
+          accessibilityRole="button"
         >
           <Text>Update Last Name</Text>
         </TouchableOpacity>
@@ -122,6 +151,9 @@ class AccountScreen extends Component {
         <TouchableOpacity
           onPress={() => navigate('ChangePictureScreen')}
           style={styles.button}
+          accessibilityLabel="Change Profile Picture"
+          accessibilityHint="Press the button to access the change profile picture screen"
+          accessibilityRole="button"
         >
           <Text>Change Profile Picture</Text>
         </TouchableOpacity>
@@ -130,10 +162,12 @@ class AccountScreen extends Component {
     )
   }
 
+  // Runs on component start, calls the load user function to get user data.
   componentDidMount () {
     this.loadUser()
   }
 
+  // Function loads user details from async storage, containing logged-in user ID and x-auth token.
   async loadUser () {
     const userId = await AsyncStorage.getItem('user_id')
     const parsedUserId = await JSON.parse(userId)
@@ -146,6 +180,7 @@ class AccountScreen extends Component {
     console.log('Loaded data from user ID: ' + this.state.user_id + ' and x-auth: ' + this.state.x_auth)
   }
 
+  // Function updates last name using a PATCH request to the API.
   updateFamilyName () {
     return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.user_id,
       {
@@ -155,7 +190,7 @@ class AccountScreen extends Component {
         }),
         headers: {
           'Content-Type': 'application/json',
-          'X-Authorization': this.state.x_auth
+          'X-Authorization': JSON.parse(this.state.x_auth)
         }
       })
       .then((response) => {
@@ -166,6 +201,7 @@ class AccountScreen extends Component {
       })
   }
 
+  // Function updates first name using a PATCH request to the API.
   updateGivenName () {
     return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.user_id,
       {
@@ -175,7 +211,7 @@ class AccountScreen extends Component {
         }),
         headers: {
           'Content-Type': 'application/json',
-          'X-Authorization': this.state.x_auth
+          'X-Authorization': JSON.parse(this.state.x_auth)
         }
       })
       .then((response) => {
@@ -186,6 +222,7 @@ class AccountScreen extends Component {
       })
   }
 
+  // Function updates password using a PATCH request to the API.
   updatePassword () {
     return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.user_id,
       {
@@ -195,7 +232,7 @@ class AccountScreen extends Component {
         }),
         headers: {
           'Content-Type': 'application/json',
-          'X-Authorization': this.state.x_auth
+          'X-Authorization': JSON.parse(this.state.x_auth)
         }
       })
       .then((response) => {
@@ -206,6 +243,7 @@ class AccountScreen extends Component {
       })
   }
 
+  // Function updates email address using a PATCH request to the API.
   updateEmail () {
     return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.user_id,
       {
@@ -215,7 +253,7 @@ class AccountScreen extends Component {
         }),
         headers: {
           'Content-Type': 'application/json',
-          'X-Authorization': this.state.x_auth
+          'X-Authorization': JSON.parse(this.state.x_auth)
         }
       })
       .then((response) => {
