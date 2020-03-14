@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {
+  TextInput,
   Image,
   TouchableOpacity,
   TouchableHighlight,
@@ -20,8 +21,17 @@ class HomeScreen extends Component {
       isLoading: true,
       chitList: [],
       user_id: '',
-      x_auth: ''
+      x_auth: '',
+      given_name: '',
+      family_name: '',
+      chit_content: ''
     }
+  }
+
+  handleChitContent = (text) => {
+    this.setState({
+      chit_content: text
+    })
   }
 
   static navigationOptions = {
@@ -51,6 +61,42 @@ class HomeScreen extends Component {
       if (this.state.user_id) {
         return (
           <View style={styles.mainView}>
+
+            <View style={styles.userBar}>
+
+              <Image
+                source={{
+                  uri: ('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.user_id + '/photo')
+                }}
+                style={styles.userBarPicture}
+              />
+
+              <View style={styles.rightBar}>
+
+                <Text style={styles.userBarText}>Hello, {this.state.given_name}. What's happening?</Text>
+
+                <TextInput
+                  style={styles.userBarEntry}
+                  onChangeText={this.handleChitContent}
+                  placeholder='Type Chit...'
+                  accessibilityLabel='Chit Content'
+                  accessibilityHint='Enter chit content here'
+                  accessibilityRole='keyboardkey'
+                />
+
+                <TouchableOpacity
+                  onPress={() => this.addChit()}
+                  style={styles.addChitButton}
+                  accessibilityLabel='Post Chit'
+                  accessibilityHint='Press the button to post the chit'
+                  accessibilityRole='button'
+                >
+                  <Text>Post</Text>
+                </TouchableOpacity>
+
+              </View>
+
+            </View>
 
             <View style={styles.buttonView}>
               <TouchableOpacity
@@ -152,7 +198,45 @@ class HomeScreen extends Component {
       x_auth: parsedXAuth,
       user_id: parsedUserId
     })
+    this.getUserData()
     console.log('User Loaded: ' + this.state.user_id + ' with auth: ' + this.state.x_auth)
+  }
+
+  addChit () {
+    var date = Date.parse(new Date())
+      return fetch('http://10.0.2.2:3333/api/v0.0.5/chits',
+        {
+           method: 'POST',
+           body: JSON.stringify({
+             chit_content: this.state.chit_content,
+             timestamp: date
+           }),
+           headers: {
+             'Content-Type': 'application/json',
+             'X-Authorization': JSON.parse(this.state.x_auth)
+           }
+         })
+         .then((response) => {
+           Alert.alert('Chit Added')
+         })
+         .catch((error) => {
+           console.error(error)
+         })
+  }
+
+  // Gets name of the user based on the profile ID field in the state.
+  getUserData () {
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.user_id)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          given_name: responseJson.given_name,
+          family_name: responseJson.family_name,
+        })
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   async removeUser () {
@@ -239,6 +323,45 @@ const styles = StyleSheet.create({
   },
   chitHeader: {
     fontWeight: 'bold'
+  },
+  userBar: {
+    flexDirection: 'row',
+    marginTop: 10,
+    justifyContent: 'center'
+  },
+  rightBar: {
+    flexDirection: 'column'
+  },
+  userBarText: {
+    marginLeft: 20,
+    fontWeight: 'bold',
+    marginBottom: 10
+  },
+  userBarPicture: {
+    width: 100,
+    height: 100,
+    marginLeft: 20,
+    borderRadius: 50,
+    marginBottom: 10,
+    marginTop: 10
+  },
+  userBarEntry: {
+    marginLeft: 20,
+    padding: 10,
+    borderColor: '#74abe7',
+    borderRadius: 5,
+    borderWidth: 1.5,
+    backgroundColor: '#ffffff',
+    elevation: 3
+  },
+  addChitButton: {
+    backgroundColor: '#c7ddf5',
+    marginTop: 5,
+    padding: 5,
+    marginLeft: 20,
+    marginRight: 160,
+    elevation: 5,
+    borderRadius: 10
   }
 })
 
