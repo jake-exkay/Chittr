@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   Image,
   StyleSheet,
@@ -7,25 +7,27 @@ import {
   TextInput,
   Text,
   View
-} from 'react-native';
+} from 'react-native'
 
+// Component shows a register form for creating accounts.
 class RegisterScreen extends Component {
 
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
+
     this.state = {
       given_name: '',
       family_name: '',
       email: '',
       password: ''
-    };
+    }
   }
 
   static navigationOptions = {
     headerTitle: () => (
         <Image
-          source = {require("../../img/chittr_logo.png")}
-          style = {{width: 100, height: 50, marginLeft: 85}}
+          source = {require('../../img/chittr_logo.png')}
+          style = {{ width: 100, height: 50, marginLeft: 85 }}
         />
       ),
     headerStyle: {
@@ -33,96 +35,124 @@ class RegisterScreen extends Component {
     }
   }
 
-  render() {
-    return (
-      <View style = {styles.container}>
-
-        <Text style = {styles.registerheader}>Chittr Registration</Text>
-
-        <TextInput
-          style = {styles.textinput}
-          placeholder = "First Name"
-          onChangeText = {this.handleGivenName}
-        />
-
-        <TextInput
-          style = {styles.textinput}
-          placeholder = "Last Name"
-          onChangeText = {this.handleFamilyName}
-        />
-
-        <TextInput
-          style = {styles.textinput}
-          placeholder = "Email Address"
-          onChangeText = {this.handleEmail}
-        />
-
-        <TextInput
-          style = {styles.textinput}
-          placeholder = "Password"
-          onChangeText = {this.handlePassword}
-          secureTextEntry = {true}
-        />
-
-        <TouchableOpacity
-          onPress = {() => this.addUser()}
-          style = {styles.button}
-        >
-
-        <Text>Register</Text>
-
-        </TouchableOpacity>
-
-      </View>
-    );
-  }
-
-  addUser() {
-    return fetch("http://10.0.2.2:3333/api/v0.0.5/user",
-    {
-       method: 'POST',
-       body: JSON.stringify({
-         given_name: this.state.given_name,
-         family_name: this.state.family_name,
-         email: this.state.email,
-         password: this.state.password
-       }),
-       headers: {
-         "Content-Type":"application/json"
-       }
-   })
-   .then((response) => {
-     if (response.status == "201") {
-       Alert.alert("Successfully created account!");
-     } else {
-       Alert.alert("Sorry! There was an issue creating your account.");
-     }
-   })
-   .catch((error) => {
-     console.error(error);
-   });
- }
-
   handleGivenName = (text) => {
-    this.setState({given_name: text})
+    this.setState({
+      given_name: text
+    })
   }
 
   handleFamilyName = (text) => {
-    this.setState({family_name: text})
+    this.setState({
+      family_name: text
+    })
   }
 
   handleEmail = (text) => {
-    this.setState({email: text})
+    this.setState({
+      email: text
+    })
   }
 
   handlePassword = (text) => {
-    this.setState({password: text})
+    this.setState({
+      password: text
+    })
   }
 
+  // Renders the registration form.
+  render () {
+    return (
+      <View style={styles.mainView} accessible={true}>
 
+        <Text style={styles.registerHeader}>Chittr Registration</Text>
+
+        <TextInput
+          style={styles.textEntry}
+          placeholder='First Name'
+          onChangeText={this.handleGivenName}
+          accessibilityLabel='First Name'
+          accessibilityHint='Enter first name here'
+          accessibilityRole='keyboardkey'
+        />
+
+        <TextInput
+          style={styles.textEntry}
+          placeholder='Last Name'
+          onChangeText={this.handleFamilyName}
+          accessibilityLabel='Last Name'
+          accessibilityHint='Enter last name here'
+          accessibilityRole='keyboardkey'
+        />
+
+        <TextInput
+          style={styles.textEntry}
+          placeholder='Email Address'
+          onChangeText={this.handleEmail}
+          accessibilityLabel='Email Address'
+          accessibilityHint='Enter email address here'
+          accessibilityRole='keyboardkey'
+        />
+
+        <TextInput
+          style={styles.textEntry}
+          placeholder='Password'
+          onChangeText={this.handlePassword}
+          secureTextEntry={true}
+          accessibilityLabel='Password'
+          accessibilityHint='Enter password here'
+          accessibilityRole='keyboardkey'
+        />
+
+        <TouchableOpacity
+          onPress={() => this.addUser()}
+          style={styles.button}
+          accessibilityLabel='Register'
+          accessibilityHint='Press the button to register account'
+          accessibilityRole='keyboardkey'
+        >
+          <Text>Register</Text>
+        </TouchableOpacity>
+
+      </View>
+    )
+  }
+
+  // Function uses the user POST endpoint to add a new user.
+  addUser () {
+    return fetch("http://10.0.2.2:3333/api/v0.0.5/user",
+      {
+         method: 'POST',
+         body: JSON.stringify({
+           given_name: this.state.given_name,
+           family_name: this.state.family_name,
+           email: this.state.email,
+           password: this.state.password
+         }),
+         headers: {
+           'Content-Type': 'application/json'
+         }
+     })
+   // Check if the response was successful and if so, show a success message.
+     .then((response) => {
+       if (response.status == '201') {
+         Alert.alert('Successfully created account!')
+       } else {
+         Alert.alert('Sorry! There was an issue creating your account.')
+       }
+     })
+     .catch((error) => {
+       console.error(error)
+     })
+ }
 }
 
 const styles = StyleSheet.create({
+  mainView: {
+    flex: 1,
+    flexDirection: 'column',
+    marginTop: 10,
+    backgroundColor: '#fcfbe4'
+  },
   button: {
     alignItems: 'center',
     backgroundColor: '#c7ddf5',
@@ -145,20 +175,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     elevation: 3
   },
-  container: {
-    marginTop: 80,
-  },
-  logo: {
-    width: 200,
-    height: 100,
-    justifyContent: 'center',
-    marginLeft: 105
-  },
-  registerheader: {
+  registerHeader: {
     marginLeft: 80,
     fontSize: 30,
     marginBottom: 10
   }
-});
+})
 
-export default RegisterScreen;
+export default RegisterScreen
