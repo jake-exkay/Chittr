@@ -17,6 +17,7 @@ import {
 class HomeScreen extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
       isLoading: true,
       chitList: [],
@@ -60,7 +61,7 @@ class HomeScreen extends Component {
     } else {
       if (this.state.user_id) {
         return (
-          <View style={styles.mainView}>
+          <View style={styles.mainView} accessibile={true}>
 
             <View style={styles.userBar}>
 
@@ -102,6 +103,9 @@ class HomeScreen extends Component {
               <TouchableOpacity
                 onPress = {() => this.logoutUser()}
                 style = {styles.topButton}
+                accessibilityLabel='Logout'
+                accessibilityHint='Press the button to logout'
+                accessibilityRole='button'
               >
                 <Text>Logout</Text>
               </TouchableOpacity>
@@ -109,6 +113,9 @@ class HomeScreen extends Component {
               <TouchableOpacity
                 onPress = {() => navigate('ProfileScreen', {userID:this.state.user_id})}
                 style = {styles.topButton}
+                accessibilityLabel='Profile'
+                accessibilityHint='Press the button to view your profile'
+                accessibilityRole='button'
               >
                 <Text>Profile</Text>
               </TouchableOpacity>
@@ -116,6 +123,9 @@ class HomeScreen extends Component {
               <TouchableOpacity
                 onPress = {() => navigate('AddChitScreen')}
                 style = {styles.topButton}
+                accessibilityLabel='Add Chit'
+                accessibilityHint='Press the button to view the add chit screen'
+                accessibilityRole='button'
               >
                 <Text>Add Chit</Text>
               </TouchableOpacity>
@@ -126,7 +136,7 @@ class HomeScreen extends Component {
             <FlatList
               data={this.state.chitList.reverse()}
               renderItem={({ item }) =>
-                <TouchableHighlight onPress={() => navigate('ChitScreen', {chitID:item.chit_id, chitContent:item.chit_content, userID:item.user.user_id})}>
+                <TouchableHighlight onPress={() => navigate('ChitScreen', {chitID:item.chit_id, chitContent:item.chit_content, userID:item.user.user_id, longitude:item.location.longitude, latitude:item.location.latitude})}>
                   <Text style={styles.chitItem}>
                     <Text style={styles.chitHeader}>{item.user.given_name} {item.user.family_name} says: {'\n'}</Text>
                     <Text>{item.chit_content}{'\n'}{'\n'}</Text>
@@ -142,14 +152,16 @@ class HomeScreen extends Component {
         )
       } else {
         return (
-          <View style={styles.mainView}>
-
+          <View style={styles.mainView} accessibile={true}>
 
             <View style={styles.buttonView}>
 
             <TouchableOpacity
               onPress = {() => navigate('LoginScreen')}
               style = {styles.topButton}
+              accessibilityLabel='Login'
+              accessibilityHint='Press the button to login'
+              accessibilityRole='button'
             >
               <Text>Login</Text>
             </TouchableOpacity>
@@ -157,6 +169,9 @@ class HomeScreen extends Component {
             <TouchableOpacity
               onPress = {() => navigate('RegisterScreen')}
               style = {styles.topButton}
+              accessibilityLabel='Register'
+              accessibilityHint='Press the button to view the register screen'
+              accessibilityRole='button'
             >
               <Text>Register</Text>
             </TouchableOpacity>
@@ -168,7 +183,7 @@ class HomeScreen extends Component {
             <FlatList
               data={this.state.chitList}
               renderItem={({ item }) =>
-                <TouchableHighlight onPress={() => navigate('ChitScreen', {chitID:item.chit_id, chitContent:item.chit_content, userID:item.user.user_id})}>
+                <TouchableHighlight onPress={() => navigate('ChitScreen', {chitID:item.chit_id, chitContent:item.chit_content, userID:item.user.user_id, longitude:item.location.longitude, latitude:item.location.latitude})}>
                   <Text style={styles.chitItem}>
                     <Text style={styles.chitHeader}>{item.user.given_name} {item.user.family_name} says: {'\n'}</Text>
                     <Text>{item.chit_content}{'\n'}{'\n'}</Text>
@@ -186,11 +201,13 @@ class HomeScreen extends Component {
     }
   }
 
+  // Runs on startup of component, loads the user and gets chit data.
   componentDidMount () {
-    this.getData()
+    this.getChits()
     this.loadUser()
   }
 
+  // Loads the user data from async storage and stores in the state.
   async loadUser () {
     const userId = await AsyncStorage.getItem('user_id')
     const parsedUserId = await JSON.parse(userId)
@@ -204,6 +221,7 @@ class HomeScreen extends Component {
     console.log('User Loaded: ' + this.state.user_id + ' with auth: ' + this.state.x_auth)
   }
 
+  // Function adds a chit, sends a POST request to the API.
   addChit () {
     var date = Date.parse(new Date())
       return fetch('http://10.0.2.2:3333/api/v0.0.5/chits',
@@ -241,6 +259,7 @@ class HomeScreen extends Component {
       })
   }
 
+  // Removes a user from async storage (used when logging out).
   async removeUser () {
     try {
       await AsyncStorage.removeItem('x_auth')
@@ -251,7 +270,8 @@ class HomeScreen extends Component {
     }
   }
 
-  getData () {
+  // Function gets all chits and saves the response in the state.
+  getChits () {
     return fetch('http://10.0.2.2:3333/api/v0.0.5/chits')
       .then((response) => response.json())
       .then((responseJson) => {
@@ -265,6 +285,7 @@ class HomeScreen extends Component {
       })
   }
 
+  // Function posts to the API using the logout endpoint and calls the function to remove user data from the async state.
   logoutUser () {
     return fetch('http://10.0.2.2:3333/api/v0.0.5/logout',
       {

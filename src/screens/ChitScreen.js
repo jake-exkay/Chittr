@@ -27,7 +27,9 @@ class ChitScreen extends Component {
       family_name: '',
       given_name: '',
       user_id: '',
-      x_auth: ''
+      x_auth: '',
+      longitude: '',
+      latitude: ''
     }
   }
 
@@ -60,6 +62,8 @@ class ChitScreen extends Component {
             <View style={styles.mainView}>
 
               <Text style={styles.chitItem}>{this.state.chit_content}</Text>
+
+              <Text style={styles.chitItem}>{this.state.latitude + ' ' + this.state.longitude}</Text>
 
               <Image
                 source={{
@@ -101,6 +105,8 @@ class ChitScreen extends Component {
 
               <Text style={styles.chitItem}>{this.state.chit_content}</Text>
 
+              <Text style={styles.chitItem}>{this.state.latitude + ' ' + this.state.longitude}</Text>
+
               <Image
                 source={{
                   uri: ('http://10.0.2.2:3333/api/v0.0.5/chits/' + this.state.chit_id + '/photo')
@@ -139,6 +145,8 @@ class ChitScreen extends Component {
       chit_id: params.chitID,
       posted_user_id: params.userID,
       chit_content: params.chitContent,
+      longitude: params.longitude,
+      latitude: params.latitude,
       isLoading: false
     })
     this.getUserData(params.userID)
