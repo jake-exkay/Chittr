@@ -12,12 +12,13 @@ import {
   Text,
   View
 } from 'react-native'
-import { RNCamera } from 'react-native-camera';
+import { RNCamera } from 'react-native-camera'
 
-
+// Component shows an individual chit as well as the poster, location information and image.
 class ChitScreen extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
       isLoading: true,
       chit_id: '',
@@ -33,7 +34,7 @@ class ChitScreen extends Component {
   static navigationOptions = {
     headerTitle: () => (
         <Image
-          source = {require("../../img/chittr_logo.png")}
+          source = {require('../../img/chittr_logo.png')}
           style = {{width: 100, height: 50, marginLeft: 85}}
         />
       ),
@@ -43,7 +44,6 @@ class ChitScreen extends Component {
   }
 
   render () {
-
     const { navigate } = this.props.navigation
 
     if (this.state.isLoading) {
@@ -76,7 +76,7 @@ class ChitScreen extends Component {
                 ref={ref => {
                   this.camera = ref;
                 }}
-                style={styles.capture}
+                style={styles.captureView}
               />
 
               <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
@@ -126,11 +126,13 @@ class ChitScreen extends Component {
     }
   }
 
+  // Runs on start of component, calls the get parameters function.
   componentDidMount () {
     this.getParams()
   }
 
-  getParams() {
+  // Function gets parameters from navigation, including the chit and the user ID of the user who posted.
+  getParams () {
     const { params } = this.props.navigation.state
     console.log('Chit ID: ' + params.chitID + ' User ID: ' + params.userID + ' Content: ' + params.chitContent)
     this.setState({
@@ -142,6 +144,7 @@ class ChitScreen extends Component {
     this.getUserData(params.userID)
   }
 
+  // Function loads user data from async storage and stores in the state.
   async loadUser () {
     const userId = await AsyncStorage.getItem('user_id')
     const parsedUserId = await JSON.parse(userId)
@@ -153,6 +156,7 @@ class ChitScreen extends Component {
     })
   }
 
+  // Function gets user data based on the ID of the user who posted, saves family name and given name in the state.
   getUserData (postedID) {
     return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + postedID)
       .then((response) => response.json())
@@ -168,30 +172,31 @@ class ChitScreen extends Component {
       })
   }
 
-  takePicture = async() => {
-    if(this.camera) {
-      const options = { quality: 0.5, base64: true };
-      const data = await this.camera.takePictureAsync(options);
+  // Function takes picture and posts to API.
+  takePicture = async () => {
+    if (this.camera) {
+      const options = { quality: 0.5, base64: true }
+      const data = await this.camera.takePictureAsync(options)
 
-      console.log(data.uri);
+      console.log('Chit Image: ' + data.uri)
 
-      return fetch("http://10.0.2.2:3333/api/v0.0.5/chits/" + this.state.chit_id + "/photo",
-      {
-         method: 'POST',
-         body: data,
-         headers: {
-           "Content-Type":"image/jpeg",
-           "X-Authorization":JSON.parse(this.state.x_auth),
-         }
-     })
-     .then((response) => {
-       Alert.alert("Photo Updated!");
-     })
-     .catch((error) => {
-       console.error(error);
-     });
-    }
-  };
+      return fetch('http://10.0.2.2:3333/api/v0.0.5/chits/' + this.state.chit_id + '/photo',
+        {
+           method: 'POST',
+           body: data,
+           headers: {
+             "Content-Type":"image/jpeg",
+             "X-Authorization":JSON.parse(this.state.x_auth),
+           }
+       })
+       .then((response) => {
+         Alert.alert("Photo Updated!");
+       })
+       .catch((error) => {
+         console.error(error);
+       });
+     }
+  }
 
 }
 
@@ -214,16 +219,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e6ffff',
     elevation: 2
   },
-  container: {
-    flex: 1,
-    flexDirection: 'column'
-  },
-  preview: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  capture: {
+  captureView: {
     flex: 1,
     padding: 15,
     alignSelf: 'center',

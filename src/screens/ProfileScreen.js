@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {
+  FlatList,
   Image,
   ActivityIndicator,
   AsyncStorage,
@@ -9,9 +10,11 @@ import {
   View
 } from 'react-native'
 
+// Component displays the profile of a user based on the profile_id field in the state.
 class ProfileScreen extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
       isLoading: true,
       user_id: '',
@@ -20,15 +23,15 @@ class ProfileScreen extends Component {
       family_name: '',
       profile_id: '',
       followerList: [],
+      chitList: [],
       isFollower: false,
-      profile_picture: ''
     }
   }
 
   static navigationOptions = {
     headerTitle: () => (
         <Image
-          source = {require("../../img/chittr_logo.png")}
+          source = {require('../../img/chittr_logo.png')}
           style = {{width: 100, height: 50, marginLeft: 85}}
         />
       ),
@@ -51,7 +54,7 @@ class ProfileScreen extends Component {
     // User not logged in
     } else if (this.state.user_id === false) {
       return (
-        <View style={styles.mainView}>
+        <View style={styles.mainView} accessible={true}>
 
           <Text style={styles.username}>{this.state.given_name + ' ' + this.state.family_name}</Text>
 
@@ -66,13 +69,32 @@ class ProfileScreen extends Component {
             <TouchableOpacity
               title='Followers'
               onPress={() => navigate('FollowersScreen', {userID:this.state.profile_id})}
+              accessibilityLabel='View Followers'
+              accessibilityHint='Press the button to view the followers of the user'
+              accessibilityRole='button'
             />
 
             <TouchableOpacity
               title='Following'
-              onPress={() => navigate('FollowersScreen', {userID:this.state.profile_id})}
+              onPress={() => navigate('FollowingScreen', {userID:this.state.profile_id})}
+              accessibilityLabel='View Following'
+              accessibilityHint='Press the button to see who the user is following'
+              accessibilityRole='button'
             />
           </View>
+
+          <Text style={styles.recentChits}>{this.state.given_name + ' ' + this.state.family_name} says:</Text>
+
+          <FlatList
+            data={this.state.chitList}
+            renderItem={({ item }) =>
+              <Text style={styles.chitItem}>
+                <Text>{item.chit_content}</Text>
+              </Text>
+            }
+            keyExtractor={({ chit_id }, index) => chit_id.toString()}
+            style={{ margin: 20 }}
+          />
 
         </View>
       )
@@ -80,7 +102,7 @@ class ProfileScreen extends Component {
     // User viewing their own profile
     } else if (this.state.user_id == this.state.profile_id) {
       return (
-        <View style={styles.mainView}>
+        <View style={styles.mainView} accessible={true}>
 
           <Text style={styles.username}>{this.state.given_name + ' ' + this.state.family_name}</Text>
 
@@ -95,6 +117,9 @@ class ProfileScreen extends Component {
             <TouchableOpacity
               onPress={() => navigate('AccountScreen')}
               style={styles.profileButton}
+              accessibilityLabel='Edit Account'
+              accessibilityHint='Press the button to make changes to your account'
+              accessibilityRole='button'
             >
               <Text>Edit Account</Text>
             </TouchableOpacity>
@@ -102,17 +127,36 @@ class ProfileScreen extends Component {
             <TouchableOpacity
               onPress={() => navigate('FollowersScreen', {userID:this.state.profile_id})}
               style={styles.profileButton}
+              accessibilityLabel='View Followers'
+              accessibilityHint='Press the button to view your followers'
+              accessibilityRole='button'
             >
               <Text>Followers</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => navigate('FollowersScreen', {userID:this.state.profile_id})}
+              onPress={() => navigate('FollowingScreen', {userID:this.state.profile_id})}
               style={styles.profileButton}
+              accessibilityLabel='View Following'
+              accessibilityHint='Press the button to view users you are following'
+              accessibilityRole='button'
             >
               <Text>Following</Text>
             </TouchableOpacity>
           </View>
+
+          <Text style={styles.recentChits}>{this.state.given_name + ' ' + this.state.family_name} says:</Text>
+
+          <FlatList
+            data={this.state.chitList}
+            renderItem={({ item }) =>
+              <Text style={styles.chitItem}>
+                <Text>{item.chit_content}</Text>
+              </Text>
+            }
+            keyExtractor={({ chit_id }, index) => chit_id.toString()}
+            style={{ margin: 20 }}
+          />
 
         </View>
       )
@@ -120,7 +164,7 @@ class ProfileScreen extends Component {
     } else {
       if (this.state.isFollower == false) {
         return (
-          <View style={styles.mainView}>
+          <View style={styles.mainView} accessible={true}>
 
             <Text style={styles.username}>{this.state.given_name + ' ' + this.state.family_name}</Text>
 
@@ -135,6 +179,9 @@ class ProfileScreen extends Component {
               <TouchableOpacity
                 onPress={() => this.followUser()}
                 style={styles.profileButton}
+                accessibilityLabel='Follow User'
+                accessibilityHint='Press the button to follow the user'
+                accessibilityRole='button'
               >
                 <Text>Follow</Text>
               </TouchableOpacity>
@@ -142,6 +189,9 @@ class ProfileScreen extends Component {
               <TouchableOpacity
                 onPress={() => navigate('FollowersScreen', {userID:this.state.profile_id})}
                 style={styles.profileButton}
+                accessibilityLabel='View Followers'
+                accessibilityHint='Press the button to view the followers of the user'
+                accessibilityRole='button'
               >
                 <Text>Followers</Text>
               </TouchableOpacity>
@@ -149,16 +199,32 @@ class ProfileScreen extends Component {
               <TouchableOpacity
                 onPress={() => navigate('FollowingScreen', {userID:this.state.profile_id})}
                 style={styles.profileButton}
+                accessibilityLabel='View Following'
+                accessibilityHint='Press the button to see who the user is following'
+                accessibilityRole='button'
               >
                 <Text>Following</Text>
               </TouchableOpacity>
             </View>
 
+            <Text style={styles.recentChits}>{this.state.given_name + ' ' + this.state.family_name} says:</Text>
+
+            <FlatList
+              data={this.state.chitList}
+              renderItem={({ item }) =>
+                <Text style={styles.chitItem}>
+                  <Text>{item.chit_content}</Text>
+                </Text>
+              }
+              keyExtractor={({ chit_id }, index) => chit_id.toString()}
+              style={{ margin: 20 }}
+            />
+
           </View>
         )
       } else {
         return (
-          <View style={styles.mainView}>
+          <View style={styles.mainView} accessible={true}>
 
             <Text style={styles.username}>{this.state.given_name + ' ' + this.state.family_name}</Text>
 
@@ -173,6 +239,9 @@ class ProfileScreen extends Component {
               <TouchableOpacity
                 onPress={() => this.unfollowUser()}
                 style={styles.profileButton}
+                accessibilityLabel='Unfollow User'
+                accessibilityHint='Press the button to unfollow the user'
+                accessibilityRole='button'
               >
                 <Text>Unfollow</Text>
               </TouchableOpacity>
@@ -180,37 +249,58 @@ class ProfileScreen extends Component {
               <TouchableOpacity
                 onPress={() => navigate('FollowersScreen', {userID:this.state.profile_id})}
                 style={styles.profileButton}
+                accessibilityLabel='View Followers'
+                accessibilityHint='Press the button to view the followers of the user'
+                accessibilityRole='button'
               >
                 <Text>Followers</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-              onPress={() => navigate('FollowingScreen', {userID:this.state.profile_id})}
+                onPress={() => navigate('FollowingScreen', {userID:this.state.profile_id})}
                 style={styles.profileButton}
+                accessibilityLabel='View Followers'
+                accessibilityHint='Press the button to see who the user is following'
+                accessibilityRole='button'
               >
                 <Text>Following</Text>
               </TouchableOpacity>
             </View>
 
+            <Text style={styles.recentChits}>{this.state.given_name + ' ' + this.state.family_name} says:</Text>
+
+            <FlatList
+              data={this.state.chitList}
+              renderItem={({ item }) =>
+                <Text style={styles.chitItem}>
+                  <Text>{item.chit_content}</Text>
+                </Text>
+              }
+              keyExtractor={({ chit_id }, index) => chit_id.toString()}
+              style={{ margin: 20 }}
+            />
+
           </View>
         )
       }
-
     }
   }
 
+  // Runs when component loads, calls the getParams function.
   componentDidMount () {
     this.getParams()
   }
 
-  getParams() {
+  // Gets parameters from the previous screen, updates the state with the ID of the users profile.
+  getParams () {
     const { params } = this.props.navigation.state
     this.setState({
-      profile_id: params.userID,
+      profile_id: params.userID
     })
     this.loadUser()
   }
 
+  // Loads user data from the async storage and saves the results to the state.
   async loadUser () {
     const userId = await AsyncStorage.getItem('user_id')
     const parsedUserId = await JSON.parse(userId)
@@ -224,6 +314,7 @@ class ProfileScreen extends Component {
     console.log(this.state.user_id + ' is viewing the profile of ' + this.state.profile_id)
   }
 
+  // Gets name of the user based on the profile ID field in the state.
   getUserData () {
     return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.profile_id)
       .then((response) => response.json())
@@ -233,6 +324,7 @@ class ProfileScreen extends Component {
           family_name: responseJson.family_name,
           isLoading: false
         })
+        this.getChits()
         this.getFollowers()
       })
       .catch((error) => {
@@ -240,6 +332,7 @@ class ProfileScreen extends Component {
       })
   }
 
+  // Gets the followers of the user specified in the profile ID field and saves as a list in the state.
   getFollowers () {
     return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.profile_id + '/followers')
       .then((response) => response.json())
@@ -254,6 +347,21 @@ class ProfileScreen extends Component {
       })
   }
 
+  // Gets all the chits and stores in a list.
+  getChits () {
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.profile_id)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          chitList: responseJson.recent_chits
+        })
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  // Checks if the user is a follower by looping through the follower list and updating the state if true.
   isFollower () {
     console.log(this.state.followerList)
     for (var i = 0; i < this.state.followerList.length; i++) {
@@ -266,6 +374,7 @@ class ProfileScreen extends Component {
     }
   }
 
+  // Function posts to the API to follow a user.
   followUser () {
     return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.profile_id + '/follow',
       {
@@ -284,6 +393,7 @@ class ProfileScreen extends Component {
       })
   }
 
+  // Function sends a delete request to the API to unfollow a user.
   unfollowUser () {
     return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.profile_id + '/follow',
       {
@@ -301,7 +411,6 @@ class ProfileScreen extends Component {
         console.error(error)
       })
   }
-
 }
 
 const styles = StyleSheet.create({
@@ -322,7 +431,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   profileButton: {
-    backgroundColor: '#e6ffff',
+    backgroundColor: '#c7ddf5',
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 5,
@@ -342,7 +451,19 @@ const styles = StyleSheet.create({
     marginLeft: 138,
     borderRadius: 100,
     marginBottom: 20
-
+  },
+  chitItem: {
+    marginBottom: 10,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#e6ffff',
+    elevation: 2
+  },
+  recentChits: {
+    fontWeight: 'bold',
+    paddingTop: 20,
+    textAlign: 'center',
+    marginTop: 10
   }
 })
 
