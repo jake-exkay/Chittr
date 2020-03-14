@@ -129,7 +129,8 @@ class HomeScreen extends Component {
                 <TouchableHighlight onPress={() => navigate('ChitScreen', {chitID:item.chit_id, chitContent:item.chit_content, userID:item.user.user_id})}>
                   <Text style={styles.chitItem}>
                     <Text style={styles.chitHeader}>{item.user.given_name} {item.user.family_name} says: {'\n'}</Text>
-                    <Text>{item.chit_content}</Text>
+                    <Text>{item.chit_content}{'\n'}{'\n'}</Text>
+                    <Text style={styles.timestamp}>Posted {new Date(item.timestamp).toLocaleString()}</Text>
                   </Text>
                 </TouchableHighlight>
               }
@@ -170,7 +171,8 @@ class HomeScreen extends Component {
                 <TouchableHighlight onPress={() => navigate('ChitScreen', {chitID:item.chit_id, chitContent:item.chit_content, userID:item.user.user_id})}>
                   <Text style={styles.chitItem}>
                     <Text style={styles.chitHeader}>{item.user.given_name} {item.user.family_name} says: {'\n'}</Text>
-                    <Text>{item.chit_content}</Text>
+                    <Text>{item.chit_content}{'\n'}{'\n'}</Text>
+                    <Text style={styles.timestamp}>Posted {new Date(item.timestamp).toLocaleString()}</Text>
                   </Text>
                 </TouchableHighlight>
               }
@@ -292,7 +294,6 @@ const styles = StyleSheet.create({
   mainView: {
     flex: 1,
     flexDirection: 'column',
-    marginTop: 10,
     backgroundColor: '#fcfbe4'
   },
   buttonView: {
@@ -326,8 +327,9 @@ const styles = StyleSheet.create({
   },
   userBar: {
     flexDirection: 'row',
-    marginTop: 10,
-    justifyContent: 'center'
+    marginTop: 20,
+    justifyContent: 'center',
+    marginBottom: 10
   },
   rightBar: {
     flexDirection: 'column'
@@ -362,6 +364,9 @@ const styles = StyleSheet.create({
     marginRight: 160,
     elevation: 5,
     borderRadius: 10
+  },
+  timestamp: {
+    fontSize: 10
   }
 })
 

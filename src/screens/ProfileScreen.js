@@ -89,7 +89,8 @@ class ProfileScreen extends Component {
             data={this.state.chitList}
             renderItem={({ item }) =>
               <Text style={styles.chitItem}>
-                <Text>{item.chit_content}</Text>
+              <Text>{item.chit_content}{'\n'}{'\n'}</Text>
+                <Text style={styles.timestamp}>Posted {new Date(item.timestamp).toLocaleString()}</Text>
               </Text>
             }
             keyExtractor={({ chit_id }, index) => chit_id.toString()}
@@ -151,7 +152,8 @@ class ProfileScreen extends Component {
             data={this.state.chitList}
             renderItem={({ item }) =>
               <Text style={styles.chitItem}>
-                <Text>{item.chit_content}</Text>
+                <Text>{item.chit_content}{'\n'}{'\n'}</Text>
+                <Text style={styles.timestamp}>Posted {new Date(item.timestamp).toLocaleString()}</Text>
               </Text>
             }
             keyExtractor={({ chit_id }, index) => chit_id.toString()}
@@ -213,7 +215,8 @@ class ProfileScreen extends Component {
               data={this.state.chitList}
               renderItem={({ item }) =>
                 <Text style={styles.chitItem}>
-                  <Text>{item.chit_content}</Text>
+                  <Text>{item.chit_content}{'\n'}{'\n'}</Text>
+                  <Text style={styles.timestamp}>Posted {new Date(item.timestamp).toLocaleString()}</Text>
                 </Text>
               }
               keyExtractor={({ chit_id }, index) => chit_id.toString()}
@@ -273,7 +276,8 @@ class ProfileScreen extends Component {
               data={this.state.chitList}
               renderItem={({ item }) =>
                 <Text style={styles.chitItem}>
-                  <Text>{item.chit_content}</Text>
+                  <Text>{item.chit_content}{'\n'}{'\n'}</Text>
+                  <Text style={styles.timestamp}>Posted {new Date(item.timestamp).toLocaleString()}</Text>
                 </Text>
               }
               keyExtractor={({ chit_id }, index) => chit_id.toString()}
@@ -464,6 +468,9 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     textAlign: 'center',
     marginTop: 10
+  },
+  timestamp: {
+    fontSize: 10
   }
 })
 
