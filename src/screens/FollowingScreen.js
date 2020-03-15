@@ -9,6 +9,7 @@ import {
   View
 } from 'react-native'
 
+// Component shows a list of users that the currently viewed user is following.
 class FollowingScreen extends Component {
   constructor (props) {
     super(props)
@@ -24,8 +25,8 @@ class FollowingScreen extends Component {
   static navigationOptions = {
     headerTitle: () => (
         <Image
-          source = {require("../../img/chittr_logo.png")}
-          style = {{width: 100, height: 50, marginLeft: 85}}
+          source = {require('../../img/chittr_logo.png')}
+          style = {{ width: 100, height: 50, marginLeft: 85 }}
         />
       ),
     headerStyle: {
@@ -33,17 +34,19 @@ class FollowingScreen extends Component {
     }
   }
 
+  // Renders a list of users the profile is following.
   render () {
     if (this.state.isLoading) {
       return (
-        <View style={styles.view}>
-          <Text style={styles.loadingtext}>Loading Users...</Text>
+        <View style={styles.mainView}>
+          <Text style={styles.loadingText}>Loading Users...</Text>
           <ActivityIndicator />
         </View>
       )
     } else {
       return (
-        <View style={styles.view}>
+        <View style={styles.mainView}>
+
           <FlatList
             data={this.state.followerList}
             renderItem={({ item }) =>
@@ -54,23 +57,28 @@ class FollowingScreen extends Component {
             keyExtractor={({ user_id }, index) => user_id.toString()}
             style={{ margin: 20 }}
           />
+
         </View>
       )
     }
   }
 
+  // Runs when component loads, calls the first function to get parameters from the previous screen.
   componentDidMount () {
     this.getParams()
   }
 
-  getParams() {
+  // Gets the user ID from the previous screen and saves to state. This ID is that of the profile
+  // that is being viewed.
+  getParams () {
     const { params } = this.props.navigation.state
     this.setState({
-      profile_id: params.userID,
+      profile_id: params.userID
     })
     this.loadUser()
   }
 
+  // Loads the current logged in user details from async storage and stores in state.
   async loadUser () {
     const userId = await AsyncStorage.getItem('user_id')
     const parsedUserId = await JSON.parse(userId)
@@ -83,6 +91,7 @@ class FollowingScreen extends Component {
     this.getFollowing()
   }
 
+  // Gets a list of following users based on the profile ID being viewed and stores the list in the state.
   getFollowing () {
     return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.profile_id + '/following')
       .then((response) => response.json())
@@ -99,28 +108,16 @@ class FollowingScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#c7ddf5',
-    padding: 10,
-    marginLeft: 100,
-    marginRight: 100,
-    borderRadius: 3,
-    elevation: 2
-  },
-  view: {
-    marginTop: 10
-  },
-  logo: {
-    width: 200,
-    height: 100,
-    justifyContent: 'center',
-    marginLeft: 105
-  },
-  username: {
+  loadingText: {
     textAlign: 'center',
-    fontSize: 30,
-    marginBottom: 30
+    marginBottom: 50,
+    marginTop: 50
+  },
+  mainView: {
+    flex: 1,
+    flexDirection: 'column',
+    marginTop: 10,
+    backgroundColor: '#fcfbe4'
   }
 })
 
