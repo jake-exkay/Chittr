@@ -19,7 +19,8 @@ class RegisterScreen extends Component {
       given_name: '',
       family_name: '',
       email: '',
-      password: ''
+      password: '',
+      validation: ''
     }
   }
 
@@ -113,13 +114,15 @@ class RegisterScreen extends Component {
           <Text>Register</Text>
         </TouchableOpacity>
 
+        <Text style={styles.errorMessage}>{this.state.validation}</Text>
+
       </View>
     )
   }
 
   // Function uses the user POST endpoint to add a new user.
   addUser () {
-    return fetch("http://10.0.2.2:3333/api/v0.0.5/user",
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/user',
       {
          method: 'POST',
          body: JSON.stringify({
@@ -135,9 +138,51 @@ class RegisterScreen extends Component {
    // Check if the response was successful and if so, show a success message.
      .then((response) => {
        if (response.status == '201') {
+         console.log('[SUCCESS] Created user account.')
          Alert.alert('Successfully created account!')
        } else {
-         Alert.alert('Sorry! There was an issue creating your account.')
+         console.log('[ERROR] Issue creating account, finding validation..')
+         if (this.state.given_name == '') {
+           this.setState({
+             validation: 'First name was left empty!'
+           })
+           console.log('[VALIDATION] Error found: first name was empty.')
+         }
+         else if (this.state.family_name == '') {
+           this.setState({
+             validation: 'Last name was left empty!'
+           })
+           console.log('[VALIDATION] Error found: last name was empty.')
+         }
+         else if (this.state.email == '') {
+           this.setState({
+             validation: 'Email address was left empty!'
+           })
+           console.log('[VALIDATION] Error found: Email address was empty.')
+         }
+         else if (this.state.password == '') {
+           this.setState({
+             validation: 'Password was left empty!'
+           })
+           console.log('[VALIDATION] Error found: password was empty.')
+         }
+         else if (this.state.email == '') {
+           this.setState({
+             validation: 'Email address was left empty!'
+           })
+           console.log('[VALIDATION] Error found: Email address was empty.')
+         }
+         else if (!this.state.email.includes('@')) {
+           this.setState({
+             validation: 'Email address is not the correct format!'
+           })
+           console.log('[VALIDATION] Error found: Incorrect email format')
+         } else {
+           this.setState({
+             validation: 'There was an issue creating your account, please check your details!'
+           })
+           console.log('[VALIDATION] Error found: Unknown error')
+         }
        }
      })
      .catch((error) => {
@@ -150,7 +195,6 @@ const styles = StyleSheet.create({
   mainView: {
     flex: 1,
     flexDirection: 'column',
-    marginTop: 10,
     backgroundColor: '#fcfbe4'
   },
   button: {
@@ -162,7 +206,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     elevation: 2
   },
-  textinput: {
+  textEntry: {
     alignItems: 'center',
     padding: 10,
     marginLeft: 100,
@@ -179,6 +223,12 @@ const styles = StyleSheet.create({
     marginLeft: 80,
     fontSize: 30,
     marginBottom: 10
+  },
+  errorMessage: {
+    marginTop: 10,
+    textAlign: 'center',
+    fontSize: 15,
+    color: 'red'
   }
 })
 

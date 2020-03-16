@@ -13,6 +13,8 @@ import ChitScreen from './screens/ChitScreen'
 import ScheduleScreen from './screens/ScheduleScreen'
 import DraftScreen from './screens/DraftScreen'
 import ChangePictureScreen from './screens/ChangePictureScreen'
+import SearchBarScreen from './screens/SearchBarScreen'
+import SearchResultsScreen from './screens/SearchResultsScreen'
 
 const AppStackNav = createStackNavigator({
   Home: {
@@ -50,9 +52,16 @@ const AppStackNav = createStackNavigator({
   },
   ChangePictureScreen: {
     screen: ChangePictureScreen
+  },
+  SearchBarScreen: {
+    screen: SearchBarScreen
+  },
+  SearchResultsScreen: {
+    screen: SearchResultsScreen
   }
 
 })
+
 const AppContainer = createAppContainer(AppStackNav)
 
 export default AppContainer

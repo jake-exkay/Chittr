@@ -20,7 +20,8 @@ class LoginScreen extends Component {
       email: '',
       password: '',
       user_id: '',
-      x_auth: ''
+      x_auth: '',
+      validation: ''
     }
   }
 
@@ -84,13 +85,20 @@ class LoginScreen extends Component {
           <Text>Login</Text>
         </TouchableOpacity>
 
+        <Text style={styles.errorMessage}>{this.state.validation}</Text>
+
       </View>
     )
+  }
+
+  componentDidMount () {
+    console.log('[STARTUP] LoginScreen Loaded')
   }
 
   // Function accesses login endpoint in the API and gets the response. The ID and token are
   // saved to the state and the user is redirected to the home screen.
   loginUser () {
+    console.log('[DEBUG] Attempting to log in user..')
     return fetch('http://10.0.2.2:3333/api/v0.0.5/login',
       {
          method: 'POST',
@@ -102,19 +110,27 @@ class LoginScreen extends Component {
            'Content-Type': 'application/json'
          }
      })
-   .then((response) => response.json())
+   .then((response) =>  {
+     if (response.status != 200) {
+       console.log('[WARNING] User tried to log in using incorrect details.')
+     }
+     return response.json()
+   })
    .then(responseJson => {
        this.props.navigation.navigate('Home');
        this.setState({
          user_id: JSON.stringify(responseJson.id),
          x_auth: JSON.stringify(responseJson.token)
        })
+       console.log('[SUCCESS] Login details saved to state.')
        this.storeUser()
-       console.log('Log in of user ID ' + this.state.user_id + ' successful. Using x_auth of ' + this.state.x_auth)
        Alert.alert('Welcome!')
    })
    .catch((error) => {
-     console.error(error);
+     console.log('[ERROR] Error logging in user. Displaying validation error.')
+     this.setState({
+       validation: 'Sorry, your details are incorrect!'
+     })
    })
  }
 
@@ -126,9 +142,9 @@ class LoginScreen extends Component {
      let userId = await AsyncStorage.getItem('user_id')
      let xAuth = await AsyncStorage.getItem('x_auth')
 
-     console.log('Stored user using ID ' + userId + ' and x_auth ' + xAuth)
+     console.log('[SUCCESS] Stored user using ID ' + userId + ' and x_auth ' + xAuth)
    } catch (error) {
-     console.log(error.message)
+     console.log('[ERROR] Error storing ID and x-auth in async storage. Log: ' + error)
    }
  }
 }
@@ -137,7 +153,6 @@ const styles = StyleSheet.create({
   mainView: {
     flex: 1,
     flexDirection: 'column',
-    marginTop: 10,
     backgroundColor: '#fcfbe4'
   },
   button: {
@@ -166,6 +181,12 @@ const styles = StyleSheet.create({
     marginLeft: 125,
     fontSize: 30,
     marginBottom: 10
+  },
+  errorMessage: {
+    marginTop: 10,
+    textAlign: 'center',
+    fontSize: 15,
+    color: 'red'
   }
 })
 

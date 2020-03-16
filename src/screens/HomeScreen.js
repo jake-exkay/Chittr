@@ -129,6 +129,16 @@ class HomeScreen extends Component {
               >
                 <Text>Add Chit</Text>
               </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress = {() => navigate('SearchBarScreen')}
+                style = {styles.topButton}
+                accessibilityLabel='Search'
+                accessibilityHint='Press the button to search for users'
+                accessibilityRole='button'
+              >
+                <Text>Search</Text>
+              </TouchableOpacity>
             </View>
 
             <Text style={styles.recentChits}>Recent Chits</Text>
@@ -201,9 +211,9 @@ class HomeScreen extends Component {
     }
   }
 
-  // Runs on startup of component, loads the user and gets chit data.
+  // Runs on startup of component, loads the user data.
   componentDidMount () {
-    this.getChits()
+    console.log('[STARTUP] HomeScreen Loaded')
     this.loadUser()
   }
 
@@ -217,45 +227,52 @@ class HomeScreen extends Component {
       x_auth: parsedXAuth,
       user_id: parsedUserId
     })
+    console.log('[DEBUG] User Loaded: ' + this.state.user_id + ' with auth: ' + this.state.x_auth)
     this.getUserData()
-    console.log('User Loaded: ' + this.state.user_id + ' with auth: ' + this.state.x_auth)
+    this.getChits()
   }
 
   // Function adds a chit, sends a POST request to the API.
   addChit () {
     var date = Date.parse(new Date())
-      return fetch('http://10.0.2.2:3333/api/v0.0.5/chits',
-        {
-           method: 'POST',
-           body: JSON.stringify({
-             chit_content: this.state.chit_content,
-             timestamp: date
-           }),
-           headers: {
-             'Content-Type': 'application/json',
-             'X-Authorization': JSON.parse(this.state.x_auth)
-           }
-         })
-         .then((response) => {
-           Alert.alert('Chit Added')
-         })
-         .catch((error) => {
-           console.error(error)
-         })
+    console.log('[DEBUG] Adding Chit..')
+
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/chits',
+      {
+         method: 'POST',
+         body: JSON.stringify({
+           chit_content: this.state.chit_content,
+           timestamp: date
+         }),
+         headers: {
+           'Content-Type': 'application/json',
+           'X-Authorization': JSON.parse(this.state.x_auth)
+         }
+       })
+       .then((response) => {
+         console.log('[SUCCESS] Chit Added')
+         Alert.alert('Chit Added')
+       })
+       .catch((error) => {
+         console.log('[ERROR] Error adding chit. Log: ' + error)
+       })
   }
 
   // Gets name of the user based on the profile ID field in the state.
   getUserData () {
+    console.log('[DEBUG] Getting User Data..')
     return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.user_id)
       .then((response) => response.json())
       .then((responseJson) => {
+        console.log('[DEBUG] Got user data, saving to state..')
         this.setState({
           given_name: responseJson.given_name,
           family_name: responseJson.family_name,
         })
+        console.log('[SUCCESS] User data saved to state..')
       })
       .catch((error) => {
-        console.log(error)
+        console.log('[ERROR] Error getting user data. Log: ' + error)
       })
   }
 
@@ -264,29 +281,35 @@ class HomeScreen extends Component {
     try {
       await AsyncStorage.removeItem('x_auth')
       await AsyncStorage.removeItem('user_id')
-      console.log('Remove stored user ID and x_auth')
+      console.log('[SUCCESS] Removed stored user ID and x_auth')
     } catch (error) {
       console.log(error)
     }
   }
 
-  // Function gets all chits and saves the response in the state.
+  // Function gets chits and saves the response in the state. The 50 most recent chits are returned,
+  // starting from position 0.
   getChits () {
-    return fetch('http://10.0.2.2:3333/api/v0.0.5/chits')
+    console.log('[DEBUG] Getting Chits..')
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/chits?start=0&count=50')
       .then((response) => response.json())
       .then((responseJson) => {
+        console.log('[DEBUG] Got Chits, saving to state...')
         this.setState({
           isLoading: false,
           chitList: responseJson
         })
+        console.log('[SUCCESS] Chits saved to state')
       })
       .catch((error) => {
-        console.log(error)
+        console.log('[ERROR] Error getting chits. Log: ' + error)
       })
   }
 
   // Function posts to the API using the logout endpoint and calls the function to remove user data from the async state.
   logoutUser () {
+    console.log('[DEBUG] Attempting to log out user')
+
     return fetch('http://10.0.2.2:3333/api/v0.0.5/logout',
       {
         method: 'POST',
@@ -297,11 +320,12 @@ class HomeScreen extends Component {
       })
       .then((response) => 'OK')
       .then((responseJson) => {
+        console.log('[SUCCESS] User log out successful')
         Alert.alert('Logged Out!')
         this.removeUser()
       })
       .catch((error) => {
-        console.error(error)
+        console.log('[ERROR] Error logging out user. Log: ' + error)
       })
   }
 }
@@ -379,7 +403,7 @@ const styles = StyleSheet.create({
   },
   addChitButton: {
     backgroundColor: '#c7ddf5',
-    marginTop: 5,
+    marginTop: 10,
     padding: 5,
     marginLeft: 20,
     marginRight: 160,
