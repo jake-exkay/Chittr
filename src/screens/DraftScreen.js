@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
+  TouchableHighlight,
+  FlatList,
   AsyncStorage,
   CheckBox,
   PermissionsAndroid,
@@ -10,25 +12,26 @@ import {
   TextInput,
   Text,
   View
-} from 'react-native';
-import Geolocation from 'react-native-geolocation-service';
+} from 'react-native'
+import Geolocation from 'react-native-geolocation-service'
 
+// Component shows a list of draft chits.
 class DraftScreen extends Component {
+  constructor (props) {
+    super(props)
 
-  constructor(props) {
-    super(props);
     this.state = {
       user_id: '',
       x_auth: '',
-      chit_content: '',
-    };
+      draft_chits: []
+    }
   }
 
   static navigationOptions = {
     headerTitle: () => (
         <Image
-          source = {require("../../img/chittr_logo.png")}
-          style = {{width: 100, height: 50, marginLeft: 85}}
+          source = {require('../../img/chittr_logo.png')}
+          style = {{ width: 100, height: 50, marginLeft: 85 }}
         />
       ),
     headerStyle: {
@@ -36,128 +39,97 @@ class DraftScreen extends Component {
     }
   }
 
-  componentDidMount() {
-    this.loadUser();
+  // Renders a list of draft chits on screen.
+  render () {
+    return (
+      <View style={styles.mainView}>
+        <Text style={styles.topHeader}>Click on a draft to post it.</Text>
+
+        <FlatList
+          data={this.state.draft_chits.reverse()}
+          renderItem={({ item }) =>
+            <TouchableHighlight onPress={() => this.addDraftChit(item.chit_content)}>
+              <Text style={styles.chitItem}>{item.chit_content}</Text>
+            </TouchableHighlight>
+          }
+          keyExtractor={({ chit_content }, index) => chit_content.toString()}
+          style={{ margin: 20 }}
+        />
+      </View>
+    )
   }
 
-  async loadUser() {
-    let user_id = await AsyncStorage.getItem('user_id');
-    let parse_user_id = await JSON.parse(user_id);
-    let x_auth = await AsyncStorage.getItem('x_auth');
-    let parse_x_auth = await JSON.parse(x_auth);
-    this.setState({
-      x_auth: parse_x_auth,
-      user_id: parse_user_id
-    });
-    console.log("Loaded data from user ID: " + this.state.user_id + " and x-auth: " + this.state.x_auth);
+  // Runs when component starts, calls the function to get the user data.
+  componentDidMount () {
+    this.loadUser()
+    this.loadDrafts()
   }
 
-  addChit() {
-    var date = Date.parse(new Date());
+  addDraftChit (chit_content) {
+    var date = Date.parse(new Date())
 
-    if (this.state.geotag == true) {
-      return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/chits',
       {
          method: 'POST',
          body: JSON.stringify({
-           chit_content: this.state.chit_content,
-           timestamp: date,
-           location: {
-             longitude: JSON.parse(this.state.longitude),
-             latitude: JSON.parse(this.state.latitude),
-           }
-         }),
-         headers: {
-           "Content-Type":"application/json",
-           "X-Authorization":JSON.parse(this.state.x_auth)
-         }
-     })
-     .then((response) => {
-       Alert.alert("Chit Added!");
-     })
-     .catch((error) => {
-       console.error(error);
-     });
-    } else {
-      return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
-      {
-         method: 'POST',
-         body: JSON.stringify({
-           chit_content: this.state.chit_content,
+           chit_content: chit_content,
            timestamp: date
          }),
          headers: {
-           "Content-Type":"application/json",
-           "X-Authorization":JSON.parse(this.state.x_auth)
+           'Content-Type': 'application/json',
+           'X-Authorization': JSON.parse(this.state.x_auth)
          }
-     })
-     .then((response) => {
-       Alert.alert("Chit Added!");
-     })
-     .catch((error) => {
-       console.error(error);
-     });
-    }
-
- }
-
-  handleChitContent = (text) => {
-    this.setState({chit_content: text})
+      })
+      .then((response) => {
+        Alert.alert('Posted Draft!')
+      })
+      .catch((error) => {
+        console.error(error)
+      })
   }
 
-  render() {
-    return (
-      <View style = {styles.view}>
+  async loadDrafts () {
+    const draftChits = await AsyncStorage.getItem('draft_chits')
+    const parsedDraftChits = await JSON.parse(draftChits)
+    this.setState({
+      draft_chits: parsedDraftChits
+    })
+    console.log('Loaded draft chits: ' + JSON.stringify(this.state.draft_chits))
+  }
 
-        
-
-      </View>
-    );
+  // Function loads user data from async storage and stores in the state.
+  async loadUser () {
+    const userId = await AsyncStorage.getItem('user_id')
+    const parsedUserId = await JSON.parse(userId)
+    const xAuth = await AsyncStorage.getItem('x_auth')
+    const parsedXAuth = await JSON.parse(xAuth)
+    this.setState({
+      x_auth: parsedXAuth,
+      user_id: parsedUserId
+    })
   }
 
 }
 
 const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#c7ddf5',
-    padding: 10,
-    marginLeft: 100,
-    marginRight: 100,
-    borderRadius: 3,
+  mainView: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: '#fcfbe4'
+  },
+  chitItem: {
+    margin: 5,
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: '#e6ffff',
     elevation: 2
   },
-  textinput: {
-    alignItems: 'center',
-    padding: 10,
-    marginLeft: 100,
-    marginTop: 10,
-    marginBottom: 10,
-    marginRight: 100,
-    borderColor: '#74abe7',
-    borderRadius: 5,
-    borderWidth: 1.5,
-    backgroundColor: '#ffffff',
-    elevation: 3
-  },
-  view: {
-    marginTop: 80,
-  },
-  logo: {
-    width: 200,
-    height: 100,
-    justifyContent: 'center',
-    marginLeft: 105
-  },
-  checkbox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10
-  },
-  checkboxtext: {
-
+  topHeader: {
+    margin: 10,
+    fontWeight: 'bold',
+    fontSize: 15,
+    textAlign: 'center'
   }
-});
+})
 
-export default DraftScreen;
+export default DraftScreen

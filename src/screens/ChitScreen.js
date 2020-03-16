@@ -217,7 +217,6 @@ const styles = StyleSheet.create({
   mainView: {
     flex: 1,
     flexDirection: 'column',
-    marginTop: 10,
     backgroundColor: '#fcfbe4'
   },
   chitItem: {

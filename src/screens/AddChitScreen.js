@@ -87,7 +87,7 @@ class AddChitScreen extends Component {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => this.saveToDrafts()}
+          onPress={() => this.storeChit()}
           style={styles.button}
           accessibilityLabel='Save to drafts'
           accessibilityHint='Press the button to save the chit to your drafts'
@@ -108,6 +108,12 @@ class AddChitScreen extends Component {
 
       </View>
     )
+  }
+
+  // Function calls find coordinates and load user functions when the component starts.
+  componentDidMount () {
+    this.findCoordinates()
+    this.loadUser()
   }
 
   // Function used to get the location permission status. If the permission is not granted, return false
@@ -135,12 +141,6 @@ class AddChitScreen extends Component {
      } catch (error) {
        console.warn(error)
      }
-  }
-
-  // Function calls find coordinates and load user functions when the component starts.
-  componentDidMount () {
-    this.findCoordinates()
-    this.loadUser()
   }
 
   // Function loads user data from async storage and saves user ID and x-auth token to the state.
@@ -233,13 +233,46 @@ class AddChitScreen extends Component {
        }
 
      }
+
+     async storeChit () {
+       try {
+         let draftChits = await AsyncStorage.getItem('draft_chits')
+
+         // If there are no drafts saved.
+         if (draftChits == null) {
+           const draftChit = [
+             {
+               chit_content: this.state.chit_content
+             }
+           ]
+           await AsyncStorage.setItem('draft_chits', JSON.stringify(draftChit))
+         } else {
+           let parsedChits = JSON.parse(draftChits)
+           await AsyncStorage.removeItem('draft_chits')
+           const newChit = [
+             {
+               chit_content: this.state.chit_content
+             }
+           ]
+           let newArray = parsedChits.concat(newChit)
+           await AsyncStorage.setItem('draft_chits', JSON.stringify(newArray))
+         }
+         let updatedList = await AsyncStorage.getItem('draft_chits')
+         console.log('List of drafts: ' + updatedList)
+       } catch (error) {
+         console.log(error.message)
+       }
+     }
+
+     addDraft () {
+
+     }
 }
 
 const styles = StyleSheet.create({
   mainView: {
     flex: 1,
     flexDirection: 'column',
-    marginTop: 10,
     backgroundColor: '#fcfbe4'
   },
   button: {
