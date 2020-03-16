@@ -23,7 +23,8 @@ class AccountScreen extends Component {
       given_name: '',
       family_name: '',
       email: '',
-      password: ''
+      password: '',
+      validation: ''
     }
   }
 
@@ -158,6 +159,8 @@ class AccountScreen extends Component {
           <Text>Change Profile Picture</Text>
         </TouchableOpacity>
 
+        <Text style={styles.errorMessage}>{this.state.validation}</Text>
+
       </View>
     )
   }
@@ -177,32 +180,12 @@ class AccountScreen extends Component {
       x_auth: parsedXAuth,
       user_id: parsedUserId
     })
-    console.log('Loaded data from user ID: ' + this.state.user_id + ' and x-auth: ' + this.state.x_auth)
-  }
-
-  // Function updates last name using a PATCH request to the API.
-  updateFamilyName () {
-    return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.user_id,
-      {
-        method: 'PATCH',
-        body: JSON.stringify({
-          family_name: this.state.family_name
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Authorization': JSON.parse(this.state.x_auth)
-        }
-      })
-      .then((response) => {
-        Alert.alert('Last Name Updated!')
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+    console.log('[DEBUG] Loaded data from user ID: ' + this.state.user_id + ' and x-auth: ' + this.state.x_auth)
   }
 
   // Function updates first name using a PATCH request to the API.
   updateGivenName () {
+    console.log('[DEBUG] Attempting to change first name..')
     return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.user_id,
       {
         method: 'PATCH',
@@ -215,15 +198,46 @@ class AccountScreen extends Component {
         }
       })
       .then((response) => {
+        console.log('[SUCCESS] Changed first name')
         Alert.alert('First Name Updated!')
       })
       .catch((error) => {
-        console.error(error)
+        console.log('[ERROR] Cannot change first name')
+        this.setState({
+          validation: 'Error changing first name!'
+        })
+      })
+  }
+
+  // Function updates last name using a PATCH request to the API.
+  updateFamilyName () {
+    console.log('[DEBUG] Attempting to change last name..')
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.user_id,
+      {
+        method: 'PATCH',
+        body: JSON.stringify({
+          family_name: this.state.family_name
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Authorization': JSON.parse(this.state.x_auth)
+        }
+      })
+      .then((response) => {
+        console.log('[SUCCESS] Changed last name')
+        Alert.alert('Last Name Updated!')
+      })
+      .catch((error) => {
+        console.log('[ERROR] Cannot change last name')
+        this.setState({
+          validation: 'Error changing last name!'
+        })
       })
   }
 
   // Function updates password using a PATCH request to the API.
   updatePassword () {
+    console.log('[DEBUG] Attempting to change password..')
     return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.user_id,
       {
         method: 'PATCH',
@@ -236,15 +250,20 @@ class AccountScreen extends Component {
         }
       })
       .then((response) => {
+        console.log('[SUCCESS] Changed password')
         Alert.alert('Password Updated!')
       })
       .catch((error) => {
-        console.error(error)
+        console.log('[ERROR] Cannot change password')
+        this.setState({
+          validation: 'Error changing password!'
+        })
       })
   }
 
   // Function updates email address using a PATCH request to the API.
   updateEmail () {
+    console.log('[DEBUG] Attempting to change email address..')
     return fetch('http://10.0.2.2:3333/api/v0.0.5/user/' + this.state.user_id,
       {
         method: 'PATCH',
@@ -257,10 +276,14 @@ class AccountScreen extends Component {
         }
       })
       .then((response) => {
+        console.log('[SUCCESS] Changed email address')
         Alert.alert('Email Updated!')
       })
       .catch((error) => {
-        console.error(error)
+        console.log('[ERROR] Cannot change email address')
+        this.setState({
+          validation: 'Error changing email address!'
+        })
       })
   }
 }
@@ -298,8 +321,13 @@ const styles = StyleSheet.create({
     marginLeft: 95,
     fontSize: 30,
     marginBottom: 10
+  },
+  errorMessage: {
+    marginTop: 10,
+    textAlign: 'center',
+    fontSize: 15,
+    color: 'red'
   }
-
 })
 
 export default AccountScreen

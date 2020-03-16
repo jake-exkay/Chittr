@@ -95,6 +95,8 @@ class HomeScreen extends Component {
                   <Text>Post</Text>
                 </TouchableOpacity>
 
+                <Text style={styles.errorMessage}>{this.state.validation}</Text>
+
               </View>
 
             </View>
@@ -237,25 +239,37 @@ class HomeScreen extends Component {
     var date = Date.parse(new Date())
     console.log('[DEBUG] Adding Chit..')
 
-    return fetch('http://10.0.2.2:3333/api/v0.0.5/chits',
-      {
-         method: 'POST',
-         body: JSON.stringify({
-           chit_content: this.state.chit_content,
-           timestamp: date
-         }),
-         headers: {
-           'Content-Type': 'application/json',
-           'X-Authorization': JSON.parse(this.state.x_auth)
-         }
-       })
-       .then((response) => {
-         console.log('[SUCCESS] Chit Added')
-         Alert.alert('Chit Added')
-       })
-       .catch((error) => {
-         console.log('[ERROR] Error adding chit. Log: ' + error)
-       })
+    if (this.state.chit_content == '') {
+      this.setState({
+        validation: 'Please type a Chit!'
+      })
+      console.log('[ERROR] User did not type a chit, displaying error.')
+    } else {
+      return fetch('http://10.0.2.2:3333/api/v0.0.5/chits',
+        {
+           method: 'POST',
+           body: JSON.stringify({
+             chit_content: this.state.chit_content,
+             timestamp: date
+           }),
+           headers: {
+             'Content-Type': 'application/json',
+             'X-Authorization': JSON.parse(this.state.x_auth)
+           }
+         })
+         .then((response) => {
+           if (this.state.chit_content.length > 141) {
+             console.log('[SUCCESS] Chit Added (limited characters)')
+             Alert.alert('Chit Added (limited to 141 characters)')
+           } else {
+             console.log('[SUCCESS] Chit Added')
+             Alert.alert('Chit Added')
+           }
+         })
+         .catch((error) => {
+           console.log('[ERROR] Error adding chit. Log: ' + error)
+         })
+    }
   }
 
   // Gets name of the user based on the profile ID field in the state.
@@ -412,6 +426,12 @@ const styles = StyleSheet.create({
   },
   timestamp: {
     fontSize: 10
+  },
+  errorMessage: {
+    marginTop: 10,
+    textAlign: 'center',
+    fontSize: 15,
+    color: 'red'
   }
 })
 

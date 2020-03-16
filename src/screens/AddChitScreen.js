@@ -26,7 +26,8 @@ class AddChitScreen extends Component {
       longitude: null,
       latitude: null,
       locationPermission: false,
-      geotag: false
+      geotag: false,
+      validation: ''
     }
   }
 
@@ -63,6 +64,8 @@ class AddChitScreen extends Component {
           accessibilityHint='Enter chit content here'
           accessibilityRole='keyboardkey'
         />
+
+        <Text style={styles.errorMessage}>{this.state.validation}</Text>
 
         <View style={styles.checkBox}>
           <CheckBox
@@ -188,52 +191,72 @@ class AddChitScreen extends Component {
   addChit () {
     var date = Date.parse(new Date())
 
-    if (this.state.geotag == true) {
-      return fetch('http://10.0.2.2:3333/api/v0.0.5/chits',
-        {
-           method: 'POST',
-           body: JSON.stringify({
-             chit_content: this.state.chit_content,
-             timestamp: date,
-             location: {
-               longitude: JSON.parse(this.state.longitude),
-               latitude: JSON.parse(this.state.latitude)
-             }
-           }),
-           headers: {
-             'Content-Type': 'application/json',
-             'X-Authorization': JSON.parse(this.state.x_auth)
-           }
-        })
-        .then((response) => {
-          this.props.navigation.goBack();
-        })
-        .catch((error) => {
-          console.error(error)
-        })
+    if (this.state.chit_content == '') {
+      this.setState({
+        validation: 'Please type a Chit!'
+      })
+      console.log('[ERROR] User did not type a chit, displaying error.')
     } else {
-      return fetch('http://10.0.2.2:3333/api/v0.0.5/chits',
-        {
-           method: 'POST',
-           body: JSON.stringify({
-             chit_content: this.state.chit_content,
-             timestamp: date
-           }),
-           headers: {
-             'Content-Type': 'application/json',
-             'X-Authorization': JSON.parse(this.state.x_auth)
-           }
-         })
-         .then((response) => {
-           this.props.navigation.goBack()
-         })
-         .catch((error) => {
-           console.error(error)
-         })
+      if (this.state.geotag == true) {
+        console.log('[DEBUG] Attempting to post chit with geotag.')
+        return fetch('http://10.0.2.2:3333/api/v0.0.5/chits',
+          {
+             method: 'POST',
+             body: JSON.stringify({
+               chit_content: this.state.chit_content,
+               timestamp: date,
+               location: {
+                 longitude: JSON.parse(this.state.longitude),
+                 latitude: JSON.parse(this.state.latitude)
+               }
+             }),
+             headers: {
+               'Content-Type': 'application/json',
+               'X-Authorization': JSON.parse(this.state.x_auth)
+             }
+          })
+          .then((response) => {
+            if (this.state.chit_content.length > 141) {
+              console.log('[SUCCESS] Chit added with geotag (limited characters)')
+            } else {
+              console.log('[SUCCESS] Chit added with geotag')
+            }
+            this.props.navigation.goBack();
+          })
+          .catch((error) => {
+            console.error(error)
+          })
+      } else {
+        console.log('[DEBUG] Attempting to post chit without geotag.')
+        return fetch('http://10.0.2.2:3333/api/v0.0.5/chits',
+          {
+             method: 'POST',
+             body: JSON.stringify({
+               chit_content: this.state.chit_content,
+               timestamp: date
+             }),
+             headers: {
+               'Content-Type': 'application/json',
+               'X-Authorization': JSON.parse(this.state.x_auth)
+             }
+           })
+           .then((response) => {
+             if (this.state.chit_content.length > 141) {
+               console.log('[SUCCESS] Chit added without geotag (limited characters)')
+             } else {
+               console.log('[SUCCESS] Chit added without geotag')
+             }
+             this.props.navigation.goBack()
+           })
+           .catch((error) => {
+             console.error(error)
+           })
+         }
        }
 
      }
 
+     // Function used to store a chit in async storage as a draft.
      async storeChit () {
        try {
          let draftChits = await AsyncStorage.getItem('draft_chits')
@@ -303,6 +326,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 10
+  },
+  errorMessage: {
+    marginTop: 10,
+    textAlign: 'center',
+    fontSize: 15,
+    color: 'red'
   }
 })
 
