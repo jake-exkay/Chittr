@@ -63,9 +63,10 @@ class ChitScreen extends Component {
           return (
             <View style={styles.mainView}>
 
-              <Text style={styles.chitItem}>{this.state.chit_content}</Text>
-
-              <Text style={styles.chitItem}>{this.state.latitude + ' ' + this.state.longitude}</Text>
+              <Text style={styles.chitItem}>
+                {this.state.chit_content}{'\n'}{'\n'}
+                {'Location: ' + this.state.latitude + ' ' + this.state.longitude}
+              </Text>
 
               <TouchableHighlight onPress={() => navigate('ProfileScreen', {userID:this.state.posted_user_id})}>
                 <Text style={styles.chitItem}>Posted By: {this.state.given_name} {this.state.family_name}</Text>
@@ -89,10 +90,10 @@ class ChitScreen extends Component {
 
                 <TouchableOpacity
                   onPress={this.takePicture.bind(this)}
-                  style= {styles.capture}
+                  style= {styles.takePictureButton}
                 >
-                <Text style={styles.takePictureText}>
-                  Take Picture
+                <Text>
+                  Add Picture
                 </Text>
                 </TouchableOpacity>
 
@@ -105,9 +106,10 @@ class ChitScreen extends Component {
           return (
             <View style={styles.mainView}>
 
-              <Text style={styles.chitItem}>{this.state.chit_content}</Text>
-
-              <Text style={styles.chitItem}>{this.state.latitude + ' ' + this.state.longitude}</Text>
+              <Text style={styles.chitItem}>
+                {this.state.chit_content}{'\n'}{'\n'}
+                {'Location: ' + this.state.latitude + ' ' + this.state.longitude}
+              </Text>
 
               <TouchableHighlight onPress={() => navigate('ProfileScreen', {userID:this.state.posted_user_id})}>
                 <Text style={styles.chitItem}>Posted By: {this.state.given_name} {this.state.family_name}</Text>
@@ -138,13 +140,16 @@ class ChitScreen extends Component {
   // Runs on start of component, calls the get parameters function.
   componentDidMount () {
     console.log('[STARTUP] ChitScreen Loaded')
+    this.setState({
+      latitude: 'No geotag found.'
+    })
     this.getParams()
   }
 
   // Function gets parameters from navigation, including the chit and the user ID of the user who posted.
   getParams () {
     const { params } = this.props.navigation.state
-    console.log('Chit ID: ' + params.chitID + ' User ID: ' + params.userID + ' Content: ' + params.chitContent)
+    console.log('[DEBUG] Chit ID: ' + params.chitID + ' User ID: ' + params.userID + ' Content: ' + params.chitContent)
     this.setState({
       chit_id: params.chitID,
       posted_user_id: params.userID,
@@ -275,20 +280,26 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
     alignSelf: 'center',
-    paddingTop: 150
+    paddingTop: 100
   },
   chitPicture: {
-    width: 200,
-    height: 200,
+    width: 100,
+    height: 100,
     marginLeft: 113,
     borderRadius: 5,
     marginBottom: 5,
     marginTop: 5
   },
-  takePictureText: {
-    flex: 1,
-    fontSize: 20,
-    paddingBottom: 100
+  takePictureButton: {
+    backgroundColor: '#c7ddf5',
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 5,
+    paddingBottom: 5,
+    elevation: 5,
+    borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 10
   }
 })
 
