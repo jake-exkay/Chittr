@@ -63,21 +63,33 @@ class ChitScreen extends Component {
           return (
             <View style={styles.mainView}>
 
-              <Text style={styles.chitItem}>
-                {this.state.chit_content}{'\n'}{'\n'}
-                {'Location: ' + this.state.latitude + ' ' + this.state.longitude}
-              </Text>
+              <View style={styles.topView}>
 
-              <TouchableHighlight onPress={() => navigate('ProfileScreen', {userID:this.state.posted_user_id})}>
-                <Text style={styles.chitItem}>Posted By: {this.state.given_name} {this.state.family_name}</Text>
-              </TouchableHighlight>
+                <View style={styles.chitView}>
 
-              <Image
-                source={{
-                  uri: ('http://10.0.2.2:3333/api/v0.0.5/chits/' + this.state.chit_id + '/photo')
-                }}
-                style={styles.chitPicture}
-              />
+                  <Text style={styles.chitItem}>
+                    {this.state.chit_content}{'\n'}{'\n'}
+                    {'Location: ' + this.state.latitude + ' ' + this.state.longitude}
+                  </Text>
+
+                  <TouchableHighlight onPress={() => navigate('ProfileScreen', {userID:this.state.posted_user_id})}>
+                    <Text style={styles.chitItem}>Posted By: {this.state.given_name} {this.state.family_name}</Text>
+                  </TouchableHighlight>
+
+                </View>
+
+                <View style={styles.imageView}>
+
+                  <Image
+                    source={{
+                      uri: ('http://10.0.2.2:3333/api/v0.0.5/chits/' + this.state.posted_user_id + '/photo')
+                    }}
+                    style={styles.chitPicture}
+                  />
+
+                </View>
+
+              </View>
 
               <RNCamera
                 ref={ref => {
@@ -176,7 +188,7 @@ class ChitScreen extends Component {
 
   // Function gets the location of a chit based on the ID.
   getLocationFromChit () {
-    console.log('[DEBUG] Attempting to get location from Chit ID')
+    console.log('[DEBUG] Attempting to get location from Chit ID ' + this.state.chit_id)
     for (var i = 0; i < this.state.chitList.length; i++) {
       if (this.state.chit_id == this.state.chitList[i].chit_id) {
         console.log('[DEBUG] Page Chit ID was found in the chit list.')
@@ -277,15 +289,13 @@ const styles = StyleSheet.create({
     elevation: 2
   },
   captureView: {
-    flex: 1,
     padding: 15,
     alignSelf: 'center',
     paddingTop: 100
   },
   chitPicture: {
-    width: 100,
-    height: 100,
-    marginLeft: 113,
+    width: 200,
+    height: 200,
     borderRadius: 5,
     marginBottom: 5,
     marginTop: 5
@@ -300,6 +310,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 10,
     marginBottom: 10
+  },
+  chitView: {
+    flex: 1,
+    flexDirection: 'column'
+  },
+  topView: {
+    flexDirection: 'row'
+  },
+  imageView: {
+    flexDirection: 'column'
   }
 })
 
