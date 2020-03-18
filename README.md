@@ -14,11 +14,12 @@ Modules:
 react-native-camera,
 react-native-geolocation-service,
 react-navigation,
-react-navigation-stack.
+react-navigation-stack,
+react-native-datepicker.
  
 The command below will install the required modules:
 ```bash
-npm install react-native-camera react-native-geolocation-service react-navigation react-navigation-stack
+npm install react-native-camera react-native-geolocation-service react-navigation react-navigation-stack react-native-datepicker
 ```
 
 ## Code Standard

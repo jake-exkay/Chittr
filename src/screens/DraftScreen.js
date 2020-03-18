@@ -56,7 +56,7 @@ class DraftScreen extends Component {
               </TouchableHighlight>
 
               <TouchableOpacity
-                onPress={() => navigate('ScheduleScreen', {chitID:item.chit_content})}
+                onPress={() => navigate('ScheduleScreen', {chitContent:item.chit_content})}
                 style={styles.scheduleButton}
                 accessibilityLabel='View Following'
                 accessibilityHint='Press the button to view users you are following'

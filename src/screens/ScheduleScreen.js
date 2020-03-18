@@ -11,7 +11,7 @@ import {
   Text,
   View
 } from 'react-native'
-import Geolocation from 'react-native-geolocation-service'
+import DatePicker from 'react-native-datepicker'
 
 // Component is used to schedule draft chits and set the time they are posted.
 class ScheduleScreen extends Component {
@@ -22,7 +22,8 @@ class ScheduleScreen extends Component {
     this.state = {
       user_id: '',
       x_auth: '',
-      chit_content: ''
+      chit_content: '',
+      date: ''
     }
   }
 
@@ -38,20 +39,29 @@ class ScheduleScreen extends Component {
     }
   }
 
-  handleChitContent = (text) => {
-    this.setState({chit_content: text})
-  }
-
   // Function renders form to add scheduled chit.
   render () {
     return (
-      <View style={styles.view}>
+      <View style={styles.mainView}>
+
+        <DatePicker
+            style={{width: 200, marginLeft: 110, marginTop: 100}}
+            date={this.state.date}
+            mode='datetime'
+            placeholder='Choose Date'
+            format='DD-MM-YYYY HH-mm'
+            maxDate='01-01-2030'
+            confirmBtnText='Confirm'
+            cancelBtnText='Cancel'
+            onDateChange={(date) => {this.setState({ date: date })}}
+          />
+
 
         <TouchableOpacity
-          onPress={() => this.addChit()}
+          onPress={() => this.scheduleChit()}
           style={styles.button}
         >
-          <Text>Post</Text>
+          <Text>Schedule</Text>
         </TouchableOpacity>
 
       </View>
@@ -61,34 +71,17 @@ class ScheduleScreen extends Component {
   // Runs on component start, calls functions to get coordinates and load user data.
   componentDidMount () {
     console.log('[STARTUP] ScheduleScreen Loaded')
-    this.findCoordinates()
-    this.loadUser()
+    var date = Date.parse(new Date())
+    this.setState({
+      current_date: date
+    })
+    this.getParams()
   }
 
-  // Function requests permission from the user to use location information.
-  requestLocationPermission = async () => {
-     try {
-       const granted = await PermissionsAndroid.request(
-         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-         {
-           title: 'Chittr Location Permission',
-           message:
-           'This app requires access to your location.',
-           buttonNegative: 'Cancel',
-           buttonPositive: 'OK'
-         }
-       )
-
-       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-         console.log('[SUCCESS] Location access ON')
-         return true
-       } else {
-         console.log('[ERROR] Location access OFF')
-         return false
-       }
-     } catch (error) {
-       console.warn('[ERROR] Error requesting location permission. Log: ' + error)
-     }
+  // Gets parameters from the previous screen, updates the state with the ID of the chit to schedule.
+  getParams () {
+    console.log('[SUCCESS] Got Chit content: ' + this.state.chit_content)
+    this.loadUser()
   }
 
   // Function loads user data from async storage and saves information in state.
@@ -104,44 +97,18 @@ class ScheduleScreen extends Component {
     console.log('[DEBUG] Loaded data from user ID: ' + this.state.user_id + ' and x-auth: ' + this.state.x_auth)
   }
 
-  findCoordinates = () => {
-    if(!this.state.locationPermission){
-     this.state.locationPermission = this.requestLocationPermission()
-    }
-
-    Geolocation.getCurrentPosition(
-      (position) => {
-        const longitude = JSON.stringify(position.coords.longitude)
-        const latitude = JSON.stringify(position.coords.latitude)
-        this.setState({
-          longitude: longitude,
-          latitude: latitude
-        })
-        console.log('[SUCCESS] Got location data successfully.')
-      },
-      (error) => {
-        console.log('[ERROR] Error getting location data. Log: ' + error)
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge: 1000
-      }
-    )
-  }
-
   // Function adds chit at a certain time specified.
-  addChit () {
+  scheduleChit () {
     var date = Date.parse(new Date())
-    console.log('[DEBUG] Attempting to add scheduled chit')
+    console.log('[DEBUG] Attempting to add scheduled chit with date ' + this.state.date)
 
-    if (this.state.geotag == true) {
+    if (false) {
       return fetch('http://10.0.2.2:3333/api/v0.0.5/chits',
       {
          method: 'POST',
          body: JSON.stringify({
            chit_content: this.state.chit_content,
-           timestamp: date,
+           timestamp: date
          }),
          headers: {
            'Content-Type': 'application/json',
@@ -160,42 +127,20 @@ class ScheduleScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  mainView: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: '#fcfbe4'
+  },
   button: {
     alignItems: 'center',
     backgroundColor: '#c7ddf5',
     padding: 10,
     marginLeft: 100,
     marginRight: 100,
+    marginTop: 10,
     borderRadius: 3,
     elevation: 2
-  },
-  textinput: {
-    alignItems: 'center',
-    padding: 10,
-    marginLeft: 100,
-    marginTop: 10,
-    marginBottom: 10,
-    marginRight: 100,
-    borderColor: '#74abe7',
-    borderRadius: 5,
-    borderWidth: 1.5,
-    backgroundColor: '#ffffff',
-    elevation: 3
-  },
-  view: {
-    marginTop: 80
-  },
-  logo: {
-    width: 200,
-    height: 100,
-    justifyContent: 'center',
-    marginLeft: 105
-  },
-  checkbox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10
   }
 })
 
