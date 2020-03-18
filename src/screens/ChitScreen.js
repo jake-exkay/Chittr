@@ -29,7 +29,8 @@ class ChitScreen extends Component {
       user_id: '',
       x_auth: '',
       longitude: '',
-      latitude: ''
+      latitude: '',
+      chitList: []
     }
   }
 
@@ -65,16 +66,16 @@ class ChitScreen extends Component {
 
               <Text style={styles.chitItem}>{this.state.latitude + ' ' + this.state.longitude}</Text>
 
+              <TouchableHighlight onPress={() => navigate('ProfileScreen', {userID:this.state.posted_user_id})}>
+                <Text style={styles.chitItem}>Posted By: {this.state.given_name} {this.state.family_name}</Text>
+              </TouchableHighlight>
+
               <Image
                 source={{
                   uri: ('http://10.0.2.2:3333/api/v0.0.5/chits/' + this.state.chit_id + '/photo')
                 }}
                 style={styles.chitPicture}
               />
-
-              <TouchableHighlight onPress={() => navigate('ProfileScreen', {userID:this.state.posted_user_id})}>
-                <Text style={styles.chitItem}>Posted By: {this.state.given_name} {this.state.family_name}</Text>
-              </TouchableHighlight>
 
               <RNCamera
                 ref={ref => {
@@ -107,6 +108,10 @@ class ChitScreen extends Component {
 
               <Text style={styles.chitItem}>{this.state.latitude + ' ' + this.state.longitude}</Text>
 
+              <TouchableHighlight onPress={() => navigate('ProfileScreen', {userID:this.state.posted_user_id})}>
+                <Text style={styles.chitItem}>Posted By: {this.state.given_name} {this.state.family_name}</Text>
+              </TouchableHighlight>
+
               <Image
                 source={{
                   uri: ('http://10.0.2.2:3333/api/v0.0.5/chits/' + this.state.chit_id + '/photo')
@@ -114,9 +119,6 @@ class ChitScreen extends Component {
                 style={styles.chitPicture}
               />
 
-              <TouchableHighlight onPress={() => navigate('ProfileScreen', {userID:this.state.posted_user_id})}>
-                <Text style={styles.chitItem}>Posted By: {this.state.given_name} {this.state.family_name}</Text>
-              </TouchableHighlight>
             </View>
           )
         }
@@ -145,8 +147,6 @@ class ChitScreen extends Component {
       chit_id: params.chitID,
       posted_user_id: params.userID,
       chit_content: params.chitContent,
-      longitude: params.longitude,
-      latitude: params.latitude,
       isLoading: false
     })
     this.getUserData(params.userID)
@@ -162,6 +162,26 @@ class ChitScreen extends Component {
       x_auth: parsedXAuth,
       user_id: parsedUserId
     })
+    this.getChits()
+  }
+
+  getLocationFromChit () {
+    console.log('[DEBUG] Attempting to get location from Chit ID')
+    for (var i = 0; i < this.state.chitList.length; i++) {
+      if (this.state.chit_id == this.state.chitList[i].chit_id) {
+        console.log('[DEBUG] Page Chit ID was found in the chit list.')
+        if (this.state.chitList[i].location.latitude && this.state.chitList[i].location.longitude) {
+          console.log('[DEBUG] Found a geotag on this Chit')
+          this.setState({
+            latitude: this.state.chitList[i].location.latitude,
+            longitude: this.state.chitList[i].location.longitude
+          })
+          console.log('[SUCCESS] Got location from chit ID ' + this.state.latitude + ' ' + this.state.longitude)
+        } else {
+          console.log('[DEBUG] This chit does not have geotag information, displaying without coordinates')
+        }
+      }
+    }
   }
 
   // Function gets user data based on the ID of the user who posted, saves family name and given name in the state.
@@ -180,6 +200,25 @@ class ChitScreen extends Component {
       })
   }
 
+  // Function gets chits and saves the response in the state.
+  getChits () {
+    console.log('[DEBUG] Getting Chits..')
+    return fetch('http://10.0.2.2:3333/api/v0.0.5/chits?start=0&count=50')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('[DEBUG] Got Chits, saving to state...')
+        this.setState({
+          isLoading: false,
+          chitList: responseJson
+        })
+        console.log('[SUCCESS] Chits saved to state')
+        this.getLocationFromChit()
+      })
+      .catch((error) => {
+        console.log('[ERROR] Error getting chits. Log: ' + error)
+      })
+  }
+
   // Function takes picture and posts to API.
   takePicture = async () => {
     if (this.camera) {
@@ -193,15 +232,15 @@ class ChitScreen extends Component {
            method: 'POST',
            body: data,
            headers: {
-             "Content-Type":"image/jpeg",
-             "X-Authorization":JSON.parse(this.state.x_auth),
+             'Content-Type': 'image/jpeg',
+             'X-Authorization': JSON.parse(this.state.x_auth),
            }
        })
        .then((response) => {
-         Alert.alert("Photo Updated!");
+         Alert.alert('Photo Updated!')
        })
        .catch((error) => {
-         console.error(error);
+         console.error(error)
        });
      }
   }

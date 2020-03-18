@@ -148,7 +148,7 @@ class HomeScreen extends Component {
             <FlatList
               data={this.state.chitList.reverse()}
               renderItem={({ item }) =>
-                <TouchableHighlight onPress={() => navigate('ChitScreen', {chitID:item.chit_id, chitContent:item.chit_content, userID:item.user.user_id, longitude:item.location.longitude, latitude:item.location.latitude})}>
+                <TouchableHighlight onPress={() => navigate('ChitScreen', {chitID:item.chit_id, chitContent:item.chit_content, userID:item.user.user_id})}>
                   <Text style={styles.chitItem}>
                     <Text style={styles.chitHeader}>{item.user.given_name} {item.user.family_name} says: {'\n'}</Text>
                     <Text>{item.chit_content}{'\n'}{'\n'}</Text>
