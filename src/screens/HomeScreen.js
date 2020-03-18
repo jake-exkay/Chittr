@@ -14,6 +14,8 @@ import {
   View
 } from 'react-native'
 
+// Home screen shows buttons to login/register or view profile/and chit when logged in.
+// Also shows a list of recent Chits.
 class HomeScreen extends Component {
   constructor (props) {
     super(props)
@@ -38,8 +40,8 @@ class HomeScreen extends Component {
   static navigationOptions = {
     headerTitle: () => (
         <Image
-          source = {require("../../img/chittr_logo.png")}
-          style = {{width: 100, height: 50, marginLeft: 140}}
+          source = {require('../../img/chittr_logo.png')}
+          style = {{ width: 100, height: 50, marginLeft: 140 }}
         />
       ),
     headerStyle: {
@@ -169,8 +171,8 @@ class HomeScreen extends Component {
             <View style={styles.buttonView}>
 
             <TouchableOpacity
-              onPress = {() => navigate('LoginScreen')}
-              style = {styles.topButton}
+              onPress={() => navigate('LoginScreen')}
+              style={styles.topButton}
               accessibilityLabel='Login'
               accessibilityHint='Press the button to login'
               accessibilityRole='button'
@@ -179,8 +181,8 @@ class HomeScreen extends Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress = {() => navigate('RegisterScreen')}
-              style = {styles.topButton}
+              onPress={() => navigate('RegisterScreen')}
+              style={styles.topButton}
               accessibilityLabel='Register'
               accessibilityHint='Press the button to view the register screen'
               accessibilityRole='button'

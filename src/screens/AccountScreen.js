@@ -32,7 +32,7 @@ class AccountScreen extends Component {
     headerTitle: () => (
       <Image
         source = {require('../../img/chittr_logo.png')}
-        style = {{width: 100, height: 50, marginLeft: 85}}
+        style = {{ width: 100, height: 50, marginLeft: 85 }}
       />
     ),
     headerStyle: {
@@ -167,6 +167,7 @@ class AccountScreen extends Component {
 
   // Runs on component start, calls the load user function to get user data.
   componentDidMount () {
+    console.log('[STARTUP] AccountScreen Loaded')
     this.loadUser()
   }
 

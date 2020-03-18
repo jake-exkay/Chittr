@@ -26,7 +26,7 @@ class ChangePictureScreen extends Component {
     headerTitle: () => (
         <Image
           source = {require('../../img/chittr_logo.png')}
-          style = {{width: 100, height: 50, marginLeft: 85}}
+          style = {{ width: 100, height: 50, marginLeft: 85 }}
         />
       ),
     headerStyle: {
@@ -73,7 +73,7 @@ class ChangePictureScreen extends Component {
 
         <TouchableOpacity
           onPress={this.takePicture.bind(this)}
-          style= {styles.button}
+          style={styles.button}
           accessibilityLabel='Change Profile Picture'
           accessibilityHint='Press the button to change your profile picture'
           accessibilityRole='button'
@@ -87,7 +87,8 @@ class ChangePictureScreen extends Component {
 
   // Function runs on startup of component, loads the user details.
   componentDidMount () {
-    this.loadUser();
+    console.log('[SUCCESS] ChangePictureScreen Loaded')
+    this.loadUser()
   }
 
   // Function loads the user ID and the x-auth token from async storage and stores in state.
@@ -100,7 +101,7 @@ class ChangePictureScreen extends Component {
       x_auth: parsedXAuth,
       user_id: parsedUserId
     })
-    console.log('Loaded data from user ID: ' + this.state.user_id + ' and x-auth: ' + this.state.x_auth)
+    console.log('[DEBUG] Loaded data from user ID: ' + this.state.user_id + ' and x-auth: ' + this.state.x_auth)
   }
 
   // Function takes a picture of the current selected preview. When the picture is taken, it is sent
@@ -110,7 +111,7 @@ class ChangePictureScreen extends Component {
       const options = { quality: 0.5, base64: true }
       const data = await this.camera.takePictureAsync(options)
 
-      console.log('Profile Picture URI: ' + data.uri)
+      console.log('[DEBUG] Profile Picture URI: ' + data.uri)
 
       return fetch('http://10.0.2.2:3333/api/v0.0.5/user/photo',
         {
@@ -123,9 +124,10 @@ class ChangePictureScreen extends Component {
         })
         .then((response) => {
           this.props.navigation.goBack()
+          console.log('[SUCCESS] Succesfully taken picture')
         })
         .catch((error) => {
-          console.error(error)
+          console.error('[ERROR] Error taking picture. Log: ' + error)
         })
     }
   }

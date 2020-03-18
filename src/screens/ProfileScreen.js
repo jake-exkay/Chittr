@@ -24,7 +24,7 @@ class ProfileScreen extends Component {
       profile_id: '',
       followerList: [],
       chitList: [],
-      isFollower: false,
+      isFollower: false
     }
   }
 
@@ -32,7 +32,7 @@ class ProfileScreen extends Component {
     headerTitle: () => (
         <Image
           source = {require('../../img/chittr_logo.png')}
-          style = {{width: 100, height: 50, marginLeft: 85}}
+          style = {{ width: 100, height: 50, marginLeft: 85 }}
         />
       ),
     headerStyle: {
@@ -292,11 +292,13 @@ class ProfileScreen extends Component {
 
   // Runs when component loads, calls the getParams function.
   componentDidMount () {
+    console.log('[STARTUP] ProfileScreen Loaded')
     this.getParams()
   }
 
   // Gets parameters from the previous screen, updates the state with the ID of the users profile.
   getParams () {
+    console.log('[DEBUG] Got params from previous state')
     const { params } = this.props.navigation.state
     this.setState({
       profile_id: params.userID
@@ -315,7 +317,7 @@ class ProfileScreen extends Component {
       user_id: parsedUserId
     })
     this.getUserData()
-    console.log(this.state.user_id + ' is viewing the profile of ' + this.state.profile_id)
+    console.log('[DEBUG] ' + this.state.user_id + ' is viewing the profile of ' + this.state.profile_id)
   }
 
   // Gets name of the user based on the profile ID field in the state.
@@ -328,6 +330,7 @@ class ProfileScreen extends Component {
           family_name: responseJson.family_name,
           isLoading: false
         })
+        console.log('[SUCCESS] Got user data successfully')
         this.getChits()
         this.getFollowers()
       })
@@ -344,6 +347,7 @@ class ProfileScreen extends Component {
         this.setState({
           followerList: responseJson
         })
+        console.log('[SUCCESS] Got follower data successfully')
         this.isFollower()
       })
       .catch((error) => {
@@ -359,6 +363,7 @@ class ProfileScreen extends Component {
         this.setState({
           chitList: responseJson.recent_chits
         })
+        console.log('[SUCCESS] Got Chit data successfully')
       })
       .catch((error) => {
         console.log(error)
@@ -373,7 +378,7 @@ class ProfileScreen extends Component {
         this.setState({
           isFollower: true
         })
-        console.log("User is a follower of " + this.state.profile_id)
+        console.log('[DEBUG] User is a follower of ' + this.state.profile_id)
       }
     }
   }
@@ -390,7 +395,7 @@ class ProfileScreen extends Component {
       })
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log('User ' + this.state.user_id + ' followed ' + this.state.profile_id)
+        console.log('[DEBUG] User ' + this.state.user_id + ' followed ' + this.state.profile_id)
       })
       .catch((error) => {
         console.error(error)
@@ -409,7 +414,7 @@ class ProfileScreen extends Component {
       })
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log('User ' + this.state.user_id + ' unfollowed ' + this.state.profile_id)
+        console.log('[DEBUG] User ' + this.state.user_id + ' unfollowed ' + this.state.profile_id)
       })
       .catch((error) => {
         console.error(error)

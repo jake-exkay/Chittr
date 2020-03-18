@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   AsyncStorage,
   CheckBox,
@@ -10,29 +10,27 @@ import {
   TextInput,
   Text,
   View
-} from 'react-native';
-import Geolocation from 'react-native-geolocation-service';
+} from 'react-native'
+import Geolocation from 'react-native-geolocation-service'
 
+// Component is used to schedule draft chits and set the time they are posted.
 class ScheduleScreen extends Component {
 
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
+
     this.state = {
       user_id: '',
       x_auth: '',
-      chit_content: '',
-      longitude: null,
-      latitude: null,
-      locationPermission: false,
-      geotag: false
-    };
+      chit_content: ''
+    }
   }
 
   static navigationOptions = {
     headerTitle: () => (
         <Image
-          source = {require("../../img/chittr_logo.png")}
-          style = {{width: 100, height: 50, marginLeft: 85}}
+          source = {require('../../img/chittr_logo.png')}
+          style = {{ width: 100, height: 50, marginLeft: 85 }}
         />
       ),
     headerStyle: {
@@ -40,7 +38,35 @@ class ScheduleScreen extends Component {
     }
   }
 
-  requestLocationPermission = async() => {
+  handleChitContent = (text) => {
+    this.setState({chit_content: text})
+  }
+
+  // Function renders form to add scheduled chit.
+  render () {
+    return (
+      <View style={styles.view}>
+
+        <TouchableOpacity
+          onPress={() => this.addChit()}
+          style={styles.button}
+        >
+          <Text>Post</Text>
+        </TouchableOpacity>
+
+      </View>
+    )
+  }
+
+  // Runs on component start, calls functions to get coordinates and load user data.
+  componentDidMount () {
+    console.log('[STARTUP] ScheduleScreen Loaded')
+    this.findCoordinates()
+    this.loadUser()
+  }
+
+  // Function requests permission from the user to use location information.
+  requestLocationPermission = async () => {
      try {
        const granted = await PermissionsAndroid.request(
          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -49,132 +75,88 @@ class ScheduleScreen extends Component {
            message:
            'This app requires access to your location.',
            buttonNegative: 'Cancel',
-           buttonPositive: 'OK',
-         },
-       );
+           buttonPositive: 'OK'
+         }
+       )
 
        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-         console.log('Location access ON');
-         return true;
+         console.log('[SUCCESS] Location access ON')
+         return true
        } else {
-         console.log('Location access OFF');
-         return false;
+         console.log('[ERROR] Location access OFF')
+         return false
        }
-     } catch (err) {
-       console.warn(err);
+     } catch (error) {
+       console.warn('[ERROR] Error requesting location permission. Log: ' + error)
      }
   }
 
-  componentDidMount() {
-    this.findCoordinates();
-    this.loadUser();
-  }
-
-  async loadUser() {
-    let user_id = await AsyncStorage.getItem('user_id');
-    let parse_user_id = await JSON.parse(user_id);
-    let x_auth = await AsyncStorage.getItem('x_auth');
-    let parse_x_auth = await JSON.parse(x_auth);
+  // Function loads user data from async storage and saves information in state.
+  async loadUser () {
+    let userId = await AsyncStorage.getItem('user_id')
+    let parsedUserId = await JSON.parse(userId)
+    let xAuth = await AsyncStorage.getItem('x_auth')
+    let parsedXAuth = await JSON.parse(xAuth)
     this.setState({
-      x_auth: parse_x_auth,
-      user_id: parse_user_id
-    });
-    console.log("Loaded data from user ID: " + this.state.user_id + " and x-auth: " + this.state.x_auth);
+      x_auth: parsedXAuth,
+      user_id: parsedUserId
+    })
+    console.log('[DEBUG] Loaded data from user ID: ' + this.state.user_id + ' and x-auth: ' + this.state.x_auth)
   }
 
   findCoordinates = () => {
     if(!this.state.locationPermission){
-     this.state.locationPermission = this.requestLocationPermission();
+     this.state.locationPermission = this.requestLocationPermission()
     }
 
     Geolocation.getCurrentPosition(
       (position) => {
-        const longitude = JSON.stringify(position.coords.longitude);
-        const latitude = JSON.stringify(position.coords.latitude);
+        const longitude = JSON.stringify(position.coords.longitude)
+        const latitude = JSON.stringify(position.coords.latitude)
         this.setState({
           longitude: longitude,
           latitude: latitude
-        });
+        })
+        console.log('[SUCCESS] Got location data successfully.')
       },
       (error) => {
-        Alert.alert(error.message)
+        console.log('[ERROR] Error getting location data. Log: ' + error)
       },
       {
         enableHighAccuracy: true,
         timeout: 20000,
         maximumAge: 1000
       }
-    );
-  };
+    )
+  }
 
-  addChit() {
-    var date = Date.parse(new Date());
+  // Function adds chit at a certain time specified.
+  addChit () {
+    var date = Date.parse(new Date())
+    console.log('[DEBUG] Attempting to add scheduled chit')
 
     if (this.state.geotag == true) {
-      return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
+      return fetch('http://10.0.2.2:3333/api/v0.0.5/chits',
       {
          method: 'POST',
          body: JSON.stringify({
            chit_content: this.state.chit_content,
            timestamp: date,
-           location: {
-             longitude: JSON.parse(this.state.longitude),
-             latitude: JSON.parse(this.state.latitude),
-           }
          }),
          headers: {
-           "Content-Type":"application/json",
-           "X-Authorization":JSON.parse(this.state.x_auth)
+           'Content-Type': 'application/json',
+           'X-Authorization': JSON.parse(this.state.x_auth)
          }
      })
      .then((response) => {
-       Alert.alert("Chit Added!");
+       console.log('[SUCCESS] Scheduled Chit added')
+       Alert.alert('Chit Scheduled!')
      })
      .catch((error) => {
-       console.error(error);
-     });
-    } else {
-      return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
-      {
-         method: 'POST',
-         body: JSON.stringify({
-           chit_content: this.state.chit_content,
-           timestamp: date
-         }),
-         headers: {
-           "Content-Type":"application/json",
-           "X-Authorization":JSON.parse(this.state.x_auth)
-         }
+       console.error('[ERROR] Error adding scheduled Chit. Log: ' + error)
      })
-     .then((response) => {
-       Alert.alert("Chit Added!");
-     })
-     .catch((error) => {
-       console.error(error);
-     });
     }
-
  }
-
-  handleChitContent = (text) => {
-    this.setState({chit_content: text})
-  }
-
-  render() {
-    return (
-      <View style = {styles.view}>
-
-        <TouchableOpacity
-          onPress = {() => this.addChit()}
-          style = {styles.button}
-        >
-          <Text>Post</Text>
-        </TouchableOpacity>
-
-      </View>
-    );
-  }
-
 }
 
 const styles = StyleSheet.create({
@@ -201,7 +183,7 @@ const styles = StyleSheet.create({
     elevation: 3
   },
   view: {
-    marginTop: 80,
+    marginTop: 80
   },
   logo: {
     width: 200,
@@ -214,10 +196,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 10
-  },
-  checkboxtext: {
-
   }
-});
+})
 
-export default ScheduleScreen;
+export default ScheduleScreen

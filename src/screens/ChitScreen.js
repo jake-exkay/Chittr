@@ -38,7 +38,7 @@ class ChitScreen extends Component {
     headerTitle: () => (
         <Image
           source = {require('../../img/chittr_logo.png')}
-          style = {{width: 100, height: 50, marginLeft: 85}}
+          style = {{ width: 100, height: 50, marginLeft: 85 }}
         />
       ),
     headerStyle: {
@@ -46,6 +46,7 @@ class ChitScreen extends Component {
     }
   }
 
+  // Renders the chit information
   render () {
     const { navigate } = this.props.navigation
 
@@ -87,8 +88,8 @@ class ChitScreen extends Component {
               <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
 
                 <TouchableOpacity
-                  onPress = {this.takePicture.bind(this)}
-                  style =  {styles.capture}
+                  onPress={this.takePicture.bind(this)}
+                  style= {styles.capture}
                 >
                 <Text style={styles.takePictureText}>
                   Take Picture
@@ -136,6 +137,7 @@ class ChitScreen extends Component {
 
   // Runs on start of component, calls the get parameters function.
   componentDidMount () {
+    console.log('[STARTUP] ChitScreen Loaded')
     this.getParams()
   }
 
@@ -149,6 +151,7 @@ class ChitScreen extends Component {
       chit_content: params.chitContent,
       isLoading: false
     })
+    console.log('[SUCCESS] Got params from previous screen')
     this.getUserData(params.userID)
   }
 
@@ -162,9 +165,11 @@ class ChitScreen extends Component {
       x_auth: parsedXAuth,
       user_id: parsedUserId
     })
+    console.log('[SUCCESS] Loaded user data')
     this.getChits()
   }
 
+  // Function gets the location of a chit based on the ID.
   getLocationFromChit () {
     console.log('[DEBUG] Attempting to get location from Chit ID')
     for (var i = 0; i < this.state.chitList.length; i++) {
@@ -193,10 +198,11 @@ class ChitScreen extends Component {
           given_name: responseJson.given_name,
           family_name: responseJson.family_name
         })
+        console.log('[SUCCESS] Got user data successfully.')
         this.loadUser()
       })
       .catch((error) => {
-        console.log(error)
+        console.log('[ERROR] Error getting user data ' + error)
       })
   }
 
@@ -225,7 +231,7 @@ class ChitScreen extends Component {
       const options = { quality: 0.5, base64: true }
       const data = await this.camera.takePictureAsync(options)
 
-      console.log('Chit Image: ' + data.uri)
+      console.log('[DEBUG] Chit Image: ' + data.uri)
 
       return fetch('http://10.0.2.2:3333/api/v0.0.5/chits/' + this.state.chit_id + '/photo',
         {
@@ -237,6 +243,7 @@ class ChitScreen extends Component {
            }
        })
        .then((response) => {
+         console.log('[SUCCESS] Uploaded photo')
          Alert.alert('Photo Updated!')
        })
        .catch((error) => {
@@ -244,7 +251,6 @@ class ChitScreen extends Component {
        });
      }
   }
-
 }
 
 const styles = StyleSheet.create({

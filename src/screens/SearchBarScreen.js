@@ -12,6 +12,7 @@ import {
   View
 } from 'react-native'
 
+// Component shows search bar.
 class SearchBarScreen extends Component {
 
   constructor (props) {
@@ -42,7 +43,8 @@ class SearchBarScreen extends Component {
     })
   }
 
-  render() {
+  // Function renders search bar on screen.
+  render () {
     const { navigate } = this.props.navigation
 
     return (
@@ -69,6 +71,11 @@ class SearchBarScreen extends Component {
 
       </View>
     )
+  }
+
+  // Runs on start of component.
+  componentDidMount () {
+    console.log('[STARTUP] SearchBarScreen Loaded')
   }
 
 }

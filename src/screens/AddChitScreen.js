@@ -50,7 +50,7 @@ class AddChitScreen extends Component {
   }
 
   // Renders data on screen, text inputs and buttons for adding chit data.
-  render() {
+  render () {
     const { navigate } = this.props.navigation
 
     return (
@@ -115,6 +115,7 @@ class AddChitScreen extends Component {
 
   // Function calls find coordinates and load user functions when the component starts.
   componentDidMount () {
+    console.log('[STARTUP] AddChitScreen Loaded')
     this.findCoordinates()
     this.loadUser()
   }
@@ -135,10 +136,10 @@ class AddChitScreen extends Component {
        )
 
        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-         console.log('Location access ON')
+         console.log('[SUCCESS] Location access ON')
          return true
        } else {
-         console.log('Location access OFF')
+         console.log('[ERROR] Location access OFF')
          return false
        }
      } catch (error) {
@@ -156,7 +157,7 @@ class AddChitScreen extends Component {
       x_auth: parsedXAuth,
       user_id: parsedUserId
     })
-    console.log('Loaded data from user ID: ' + this.state.user_id + ' and x-auth: ' + this.state.x_auth)
+    console.log('[SUCCESS] Loaded data from user ID: ' + this.state.user_id + ' and x-auth: ' + this.state.x_auth)
   }
 
   // Function gets the current coordinates of the device. First, it checks if permission has been granted then
@@ -174,6 +175,7 @@ class AddChitScreen extends Component {
           longitude: longitude,
           latitude: latitude
         })
+        console.log('[SUCCESS] Got location data')
       },
       (error) => {
         Alert.alert(error.message)
@@ -258,6 +260,7 @@ class AddChitScreen extends Component {
 
      // Function used to store a chit in async storage as a draft.
      async storeChit () {
+       console.log('[DEBUG] Attempting to store draft chit..')
        try {
          let draftChits = await AsyncStorage.getItem('draft_chits')
 
@@ -281,14 +284,13 @@ class AddChitScreen extends Component {
            await AsyncStorage.setItem('draft_chits', JSON.stringify(newArray))
          }
          let updatedList = await AsyncStorage.getItem('draft_chits')
-         console.log('List of drafts: ' + updatedList)
+         console.log('[SUCCESS] Draft Saved. List of drafts: ' + updatedList)
+         this.setState({
+           validation: 'Chit saved to drafts!'
+         })
        } catch (error) {
-         console.log(error.message)
+         console.log('[ERROR] Error storing draft chit. Log: ' + error.message)
        }
-     }
-
-     addDraft () {
-
      }
 }
 

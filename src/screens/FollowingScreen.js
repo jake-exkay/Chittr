@@ -65,6 +65,7 @@ class FollowingScreen extends Component {
 
   // Runs when component loads, calls the first function to get parameters from the previous screen.
   componentDidMount () {
+    console.log('[STARTUP] FollowingScreen Loaded')
     this.getParams()
   }
 
@@ -88,6 +89,7 @@ class FollowingScreen extends Component {
       x_auth: parsedXAuth,
       user_id: parsedUserId
     })
+    console.log('[DEBUG] Loaded user data.')
     this.getFollowing()
   }
 
@@ -100,9 +102,10 @@ class FollowingScreen extends Component {
           isLoading: false,
           followerList: responseJson
         })
+        console.log('[DEBUG] Got following data.')
       })
       .catch((error) => {
-        console.log(error)
+        console.log('[ERROR] Error loading following data. Log: ' + error)
       })
   }
 }

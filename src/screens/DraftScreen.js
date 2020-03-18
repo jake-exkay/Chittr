@@ -41,6 +41,8 @@ class DraftScreen extends Component {
 
   // Renders a list of draft chits on screen.
   render () {
+    const { navigate } = this.props.navigation
+
     return (
       <View style={styles.mainView}>
         <Text style={styles.topHeader}>Click on a draft to post it.</Text>
@@ -48,24 +50,40 @@ class DraftScreen extends Component {
         <FlatList
           data={this.state.draft_chits.reverse()}
           renderItem={({ item }) =>
-            <TouchableHighlight onPress={() => this.addDraftChit(item.chit_content)}>
-              <Text style={styles.chitItem}>{item.chit_content}</Text>
-            </TouchableHighlight>
+            <View>
+              <TouchableHighlight onPress={() => this.addDraftChit(item.chit_content)}>
+                <Text style={styles.chitItem}>{item.chit_content}</Text>
+              </TouchableHighlight>
+
+              <TouchableOpacity
+                onPress={() => navigate('ScheduleScreen', {chitID:item.chit_content})}
+                style={styles.scheduleButton}
+                accessibilityLabel='View Following'
+                accessibilityHint='Press the button to view users you are following'
+                accessibilityRole='button'
+              >
+                <Text>Schedule</Text>
+              </TouchableOpacity>
+            </View>
           }
           keyExtractor={({ chit_content }, index) => chit_content.toString()}
           style={{ margin: 20 }}
         />
+
       </View>
     )
   }
 
   // Runs when component starts, calls the function to get the user data.
   componentDidMount () {
+    console.log('[STARTUP] DraftScreen Loaded')
     this.loadUser()
     this.loadDrafts()
   }
 
+  // Function adds a chit from drafts as a chit via the api.
   addDraftChit (chit_content) {
+    console.log('[DEBUG] Attempting to add chit..')
     var date = Date.parse(new Date())
 
     return fetch('http://10.0.2.2:3333/api/v0.0.5/chits',
@@ -81,6 +99,7 @@ class DraftScreen extends Component {
          }
       })
       .then((response) => {
+        console.log('[SUCCESS] Added Chit from drafts')
         Alert.alert('Posted Draft!')
       })
       .catch((error) => {
@@ -94,7 +113,7 @@ class DraftScreen extends Component {
     this.setState({
       draft_chits: parsedDraftChits
     })
-    console.log('Loaded draft chits: ' + JSON.stringify(this.state.draft_chits))
+    console.log('[SUCCESS] Loaded draft chits: ' + JSON.stringify(this.state.draft_chits))
   }
 
   // Function loads user data from async storage and stores in the state.
@@ -107,6 +126,7 @@ class DraftScreen extends Component {
       x_auth: parsedXAuth,
       user_id: parsedUserId
     })
+    console.log('[DEBUG] User Loaded: ' + this.state.user_id + ' with auth: ' + this.state.x_auth)
   }
 
 }
@@ -129,6 +149,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
     textAlign: 'center'
+  },
+  scheduleButton: {
+    backgroundColor: '#c7ddf5',
+    paddingLeft: 5,
+    paddingRight: 5,
+    paddingTop: 5,
+    paddingBottom: 5,
+    elevation: 5,
+    borderRadius: 10
   }
 })
 

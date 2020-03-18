@@ -13,6 +13,7 @@ import {
   View
 } from 'react-native'
 
+// Component shows search results with params recieved from previous component.
 class SearchResultsScreen extends Component {
 
   constructor (props) {
@@ -67,6 +68,7 @@ class SearchResultsScreen extends Component {
 
   // Runs on start of component, calls the get parameters function.
   componentDidMount () {
+    console.log('[STARTUP] SearchResultsScreen Loaded')
     this.getParams()
   }
 
@@ -76,22 +78,23 @@ class SearchResultsScreen extends Component {
     this.setState({
       search_query: JSON.stringify(params.searchQuery)
     })
-    console.log('Search Query: ' + this.state.search_query)
+    console.log('[DEBUG] Search Query: ' + this.state.search_query)
     this.searchUsers()
   }
 
+  // Function searches users using the search_user endpoint and the search query from the previous screen.
   searchUsers() {
-    console.log("SEARCH" + this.state.search_query)
+    console.log('[DEBUG] Search query: ' + this.state.search_query)
     return fetch('http://10.0.2.2:3333/api/v0.0.5/search_user?' + 'q=' + this.state.search_query)
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
           given_name: responseJson.given_name,
-          family_name: responseJson.family_name,
+          family_name: responseJson.family_name
         })
       })
       .catch((error) => {
-        console.log(error)
+        console.log('[ERROR] Error searching users. Log: ' + error)
       })
   }
 

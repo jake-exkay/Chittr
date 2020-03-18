@@ -12,6 +12,7 @@ import {
 
 // Component shows a list of users who are following the user specified in the profile_id field in the state.
 class FollowersScreen extends Component {
+
   constructor (props) {
     super(props)
 
@@ -85,6 +86,7 @@ class FollowersScreen extends Component {
 
   // Runs on component start, calls the function to get parameters from previous screen.
   componentDidMount () {
+    console.log('[STARTUP] FollowersScreen Loaded')
     this.getParams()
   }
 
@@ -107,6 +109,7 @@ class FollowersScreen extends Component {
       x_auth: parsedXAuth,
       user_id: parsedUserId
     })
+    console.log('[DEBUG] User data loaded.')
     this.getFollowers()
   }
 
@@ -119,10 +122,10 @@ class FollowersScreen extends Component {
           isLoading: false,
           followerList: responseJson
         })
-        console.log(this.state.followerList)
+        console.log('[DEBUG] Got followers: ' + this.state.followerList)
       })
       .catch((error) => {
-        console.log(error)
+        console.log('[ERROR] Error getting followers. Log: ' + error)
       })
   }
 }

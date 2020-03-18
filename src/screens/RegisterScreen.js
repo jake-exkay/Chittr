@@ -186,7 +186,7 @@ class RegisterScreen extends Component {
        }
      })
      .catch((error) => {
-       console.error(error)
+       console.error('[ERROR] Error creating account. Log: ' + error)
      })
  }
 }
