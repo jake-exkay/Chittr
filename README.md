@@ -10,11 +10,11 @@ npx react-native run-android
 ## Required Modules
 Modules are required for the application to run properly. These modules are used to manage geotagging, images and storage of user data.
 
-Modules:
-react-native-camera
-react-native-geolocation-service
-react-navigation
-react-navigation-stack
+Modules:\n
+react-native-camera\n
+react-native-geolocation-service\n
+react-navigation\n
+react-navigation-stack\n
 
 The command below will install the required modules.
 ```bash
