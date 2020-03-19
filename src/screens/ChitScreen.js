@@ -3,7 +3,6 @@ import {
   TouchableOpacity,
   Image,
   TouchableHighlight,
-  AsyncStorage,
   Alert,
   StyleSheet,
   Button,
@@ -13,6 +12,7 @@ import {
   View
 } from 'react-native'
 import { RNCamera } from 'react-native-camera'
+import AsyncStorage from '@react-native-community/async-storage'
 
 // Component shows an individual chit as well as the poster, location information and image.
 class ChitScreen extends Component {

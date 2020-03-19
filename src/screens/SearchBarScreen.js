@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {
-  AsyncStorage,
   CheckBox,
   PermissionsAndroid,
   Image,
@@ -11,6 +10,7 @@ import {
   Text,
   View
 } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 
 // Component shows search bar.
 class SearchBarScreen extends Component {

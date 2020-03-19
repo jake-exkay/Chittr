@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {
-  AsyncStorage,
   Image,
   CheckBox,
   PermissionsAndroid,
@@ -12,6 +11,7 @@ import {
   View
 } from 'react-native'
 import Geolocation from 'react-native-geolocation-service'
+import AsyncStorage from '@react-native-community/async-storage'
 
 // Component includes text entry for writing a new chit including a button to post the chit. The component also
 // includes a checkbox option for adding a geotag and buttons to save and view drafts.

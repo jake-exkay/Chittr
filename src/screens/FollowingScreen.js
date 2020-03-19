@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import {
   Image,
-  AsyncStorage,
   StyleSheet,
   FlatList,
   ActivityIndicator,
   Text,
   View
 } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 
 // Component shows a list of users that the currently viewed user is following.
 class FollowingScreen extends Component {

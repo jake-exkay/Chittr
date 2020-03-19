@@ -3,12 +3,12 @@ import {
   FlatList,
   Image,
   ActivityIndicator,
-  AsyncStorage,
   StyleSheet,
   TouchableOpacity,
   Text,
   View
 } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 
 // Component displays the profile of a user based on the profile_id field in the state.
 class ProfileScreen extends Component {
@@ -351,7 +351,7 @@ class ProfileScreen extends Component {
         this.isFollower()
       })
       .catch((error) => {
-        console.log(error)
+        console.log('[ERROR] Error getting follower data. Log: ' + error)
       })
   }
 
@@ -366,13 +366,13 @@ class ProfileScreen extends Component {
         console.log('[SUCCESS] Got Chit data successfully')
       })
       .catch((error) => {
-        console.log(error)
+        console.log('[ERROR] Error getting chit data. Log: ' + error)
       })
   }
 
   // Checks if the user is a follower by looping through the follower list and updating the state if true.
   isFollower () {
-    console.log(this.state.followerList)
+    console.log('[DEBUG] List of followers: ' + this.state.followerList)
     for (var i = 0; i < this.state.followerList.length; i++) {
       if (this.state.user_id == this.state.followerList[i].user_id) {
         this.setState({

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   Image,
-  AsyncStorage,
   TextInput,
   Alert,
   StyleSheet,
@@ -10,6 +9,7 @@ import {
   View
 } from 'react-native'
 import { RNCamera } from 'react-native-camera'
+import AsyncStorage from '@react-native-community/async-storage'
 
 // Component consists of the ability to take a picture and upload it as the users' profile image.
 class ChangePictureScreen extends Component {

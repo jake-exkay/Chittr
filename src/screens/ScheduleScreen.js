@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {
-  AsyncStorage,
   CheckBox,
   PermissionsAndroid,
   Image,
@@ -13,6 +12,7 @@ import {
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
 import BackgroundTimer from 'react-native-background-timer'
+import AsyncStorage from '@react-native-community/async-storage'
 
 // Component is used to schedule draft chits and set the time they are posted.
 class ScheduleScreen extends Component {

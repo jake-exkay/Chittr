@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   Image,
-  AsyncStorage,
   StyleSheet,
   TouchableOpacity,
   FlatList,
@@ -9,6 +8,7 @@ import {
   Text,
   View
 } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 
 // Component shows a list of users who are following the user specified in the profile_id field in the state.
 class FollowersScreen extends Component {

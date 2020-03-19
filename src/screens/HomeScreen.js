@@ -4,7 +4,6 @@ import {
   Image,
   TouchableOpacity,
   TouchableHighlight,
-  AsyncStorage,
   Alert,
   StyleSheet,
   Button,
@@ -13,6 +12,7 @@ import {
   Text,
   View
 } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 
 // Home screen shows buttons to login/register or view profile/and chit when logged in.
 // Also shows a list of recent Chits.

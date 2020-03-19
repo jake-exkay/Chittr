@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {
   TouchableHighlight,
   FlatList,
-  AsyncStorage,
   CheckBox,
   PermissionsAndroid,
   Image,
@@ -14,6 +13,7 @@ import {
   View
 } from 'react-native'
 import Geolocation from 'react-native-geolocation-service'
+import AsyncStorage from '@react-native-community/async-storage'
 
 // Component shows a list of draft chits.
 class DraftScreen extends Component {

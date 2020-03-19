@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   FlatList,
-  AsyncStorage,
   CheckBox,
   PermissionsAndroid,
   Image,
@@ -12,6 +11,7 @@ import {
   Text,
   View
 } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 
 // Component shows search results with params recieved from previous component.
 class SearchResultsScreen extends Component {

@@ -16,11 +16,12 @@ react-native-geolocation-service,
 react-navigation,
 react-navigation-stack,
 react-native-datepicker,
-react-native-background-timer.
+react-native-background-timer,
+@react-native-community/async-storage.
  
 The command below will install the required modules:
 ```bash
-npm install react-native-camera react-native-geolocation-service react-navigation react-navigation-stack react-native-datepicker react-native-background-timer
+npm install react-native-camera react-native-geolocation-service react-navigation react-navigation-stack react-native-datepicker react-native-background-timer @react-native-community/async-storage
 ```
 
 ## Code Standard

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   Image,
-  AsyncStorage,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -9,6 +8,7 @@ import {
   Text,
   View
 } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 
 // Component shows a login form and handles a login request to the API.
 class LoginScreen extends Component {

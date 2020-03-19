@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   Image,
-  AsyncStorage,
   TextInput,
   Alert,
   StyleSheet,
@@ -9,6 +8,7 @@ import {
   Text,
   View
 } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 
 // Component used to edit user account details. The component contains text inputs and buttons for updating
 // email address, password, first name and last name. The component also includes a button which links
