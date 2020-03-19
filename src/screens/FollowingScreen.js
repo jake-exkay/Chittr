@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {
+  TouchableOpacity,
   Image,
   StyleSheet,
   FlatList,
@@ -36,6 +37,8 @@ class FollowingScreen extends Component {
 
   // Renders a list of users the profile is following.
   render () {
+    const { navigate } = this.props.navigation
+
     if (this.state.isLoading) {
       return (
         <View style={styles.mainView}>
@@ -47,12 +50,20 @@ class FollowingScreen extends Component {
       return (
         <View style={styles.mainView}>
 
+          <Text style={styles.header}>Following</Text>
+
           <FlatList
             data={this.state.followerList}
             renderItem={({ item }) =>
-              <Text>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.replace('ProfileScreen', {userID:item.user_id})}
+                style={styles.button}
+                accessibilityLabel='View user profile'
+                accessibilityHint='Press the button to view the users profile'
+                accessibilityRole='button'
+              >
                 <Text>{item.given_name} {item.family_name}</Text>
-              </Text>
+              </TouchableOpacity>
             }
             keyExtractor={({ user_id }, index) => user_id.toString()}
             style={{ margin: 20 }}
@@ -119,8 +130,13 @@ const styles = StyleSheet.create({
   mainView: {
     flex: 1,
     flexDirection: 'column',
-    marginTop: 10,
     backgroundColor: '#fcfbe4'
+  },
+  header: {
+    textAlign: 'center',
+    paddingTop: 20,
+    paddingBottom: 10,
+    fontSize: 20
   }
 })
 

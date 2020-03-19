@@ -47,14 +47,14 @@ class FollowersScreen extends Component {
         </View>
       )
     } else {
-      if (this.state.followerList.length < 0) {
+      if (this.state.followerList.length <= 0) {
         return (
-          <View style={styles.mainView}>
+          <View style={styles.mainView} accessible={true}>
 
             <Text style={styles.noFollowers}>This user does not have any followers!</Text>
 
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Profile')}
+              onPress={() => this.props.navigation.goBack()}
               style={styles.button}
               accessibilityLabel='Follow them?'
               accessibilityHint='Returns to the users profile'
@@ -67,7 +67,9 @@ class FollowersScreen extends Component {
         )
       } else {
         return (
-          <View style={styles.mainView}>
+          <View style={styles.mainView} accessible={true}>
+
+            <Text style={styles.header}>Followers</Text>
 
             <FlatList
               data={this.state.followerList}
@@ -139,7 +141,6 @@ const styles = StyleSheet.create({
   mainView: {
     flex: 1,
     flexDirection: 'column',
-    marginTop: 10,
     backgroundColor: '#fcfbe4'
   },
   button: {
@@ -159,6 +160,12 @@ const styles = StyleSheet.create({
   },
   followerName: {
     textAlign: 'center',
+    fontSize: 20
+  },
+  header: {
+    textAlign: 'center',
+    paddingTop: 20,
+    paddingBottom: 10,
     fontSize: 20
   }
 })
