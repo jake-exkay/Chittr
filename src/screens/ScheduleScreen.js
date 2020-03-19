@@ -12,6 +12,7 @@ import {
   View
 } from 'react-native'
 import DatePicker from 'react-native-datepicker'
+import BackgroundTimer from 'react-native-background-timer'
 
 // Component is used to schedule draft chits and set the time they are posted.
 class ScheduleScreen extends Component {
@@ -43,6 +44,8 @@ class ScheduleScreen extends Component {
   render () {
     return (
       <View style={styles.mainView}>
+
+        <Text style={styles.chitItem}>Chit to Schedule: {'\n'}{this.state.chit_content}</Text>
 
         <DatePicker
             style={{width: 200, marginLeft: 110, marginTop: 100}}
@@ -81,6 +84,10 @@ class ScheduleScreen extends Component {
   // Gets parameters from the previous screen, updates the state with the ID of the chit to schedule.
   getParams () {
     console.log('[SUCCESS] Got Chit content: ' + this.state.chit_content)
+    const { params } = this.props.navigation.state
+    this.setState({
+      chit_content: params.chitContent
+    })
     this.loadUser()
   }
 
@@ -99,16 +106,22 @@ class ScheduleScreen extends Component {
 
   // Function adds chit at a certain time specified.
   scheduleChit () {
-    var date = Date.parse(new Date())
     console.log('[DEBUG] Attempting to add scheduled chit with date ' + this.state.date)
 
-    if (false) {
+    var dateNow = Date.parse(new Date())
+    var difference = Math.abs(this.state.date - dateNow)
+    console.log('Diff ' + difference)
+
+    Alert.alert('Chit Scheduled!')
+
+    const addChit = BackgroundTimer.setTimeout(() => {
+      console.log('[DEBUG] Adding Scheduled Chit')
       return fetch('http://10.0.2.2:3333/api/v0.0.5/chits',
       {
          method: 'POST',
          body: JSON.stringify({
            chit_content: this.state.chit_content,
-           timestamp: date
+           timestamp: dateNow
          }),
          headers: {
            'Content-Type': 'application/json',
@@ -116,13 +129,12 @@ class ScheduleScreen extends Component {
          }
      })
      .then((response) => {
-       console.log('[SUCCESS] Scheduled Chit added')
-       Alert.alert('Chit Scheduled!')
+       console.log('[SUCCESS] Scheduled Chit Added')
      })
      .catch((error) => {
        console.error('[ERROR] Error adding scheduled Chit. Log: ' + error)
      })
-    }
+    }, 10000)
  }
 }
 
@@ -140,6 +152,13 @@ const styles = StyleSheet.create({
     marginRight: 100,
     marginTop: 10,
     borderRadius: 3,
+    elevation: 2
+  },
+  chitItem: {
+    margin: 20,
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: '#e6ffff',
     elevation: 2
   }
 })
