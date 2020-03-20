@@ -41,7 +41,6 @@ class ProfileScreen extends Component {
   }
 
   render () {
-
     const { navigate } = this.props.navigation
 
     if (this.state.isLoading) {

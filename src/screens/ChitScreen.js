@@ -96,6 +96,7 @@ class ChitScreen extends Component {
                   this.camera = ref;
                 }}
                 style={styles.captureView}
+                captureAudio={false}
               />
 
               <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>

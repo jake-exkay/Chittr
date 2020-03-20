@@ -2,7 +2,12 @@
 Chittr is a microblogging platform mobile application which allows users to register for accounts and post Chits which can be seen by other users. Chits can be geotagged or be uploaded with an image.
 
 ## Installation
-An Android emulator is required, download the source code, install required modules (see required modules section) and run the following command:
+An Android emulator is required. Download the source code, install required modules (see required modules section) and run the following commands to setup and run the project:
+```bash
+npx react-native init Chittr
+```
+
+Once files are generated, replace the files with the Chittr source code and run the command:
 ```bash
 npx react-native run-android
 ```

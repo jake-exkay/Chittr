@@ -69,6 +69,7 @@ class ChangePictureScreen extends Component {
             this.camera = ref
           }}
           style={styles.captureView}
+          captureAudio={false}
         />
 
         <TouchableOpacity
